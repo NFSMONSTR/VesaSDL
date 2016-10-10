@@ -26,7 +26,7 @@ Program Example2;
 Uses VesaSDL;
 Var Image:pointer;
 Begin
- InitAllX(800,600,false,'Example1');{Create window 800x600 with title 'Example1'}
+ InitAllX(800,600,false,'Example2');{Create window 800x600 with title 'Example2'}
 
  Image:=LoadImage1('example2.png');{Load some picture named 'example2.png'}
 
