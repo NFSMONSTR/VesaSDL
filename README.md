@@ -1,1 +1,14 @@
 # VesaSDL
+VesaSDL - Модуль для Free Pascal, позволяющий работать с графикой и сохраняющий
+частичную совместимость с модулем Vesa для Turbo Pascal
+
+Для работы требуются заголовочные файлы SDL2:
+
+https://github.com/ev1313/Pascal-SDL-2-Headers
+
+Или(не желательно)
+
+https://sourceforge.net/projects/sdl2fpc/
+
+Распространяется под лицензией zlib
+
