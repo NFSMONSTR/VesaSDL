@@ -37,76 +37,92 @@ Interface
   NormalPut=0;
   ShadowPut=1;
  Type
-  tcolor=tsdl_color;
-  tdot=record
-           r,g,b,a:integer;
-       end;
-  ptdot=^tdot;
-  ptdot1=^byte;
-  sprite=record
-          link:array of array of byte;
-          spritex,spritey:word;
-         end;
-  psprite=^sprite;
+  tColor=tSDL_Color;
+  {tSDL_Color=record
+               r,g,b,a:byte;
+              end;
+  }
   img=record
        image:pSDL_texture;
        rect:tSDL_Rect;
       end;
   pimg=^img;
- Procedure changedebug(b:boolean);
- Procedure SetColorRGBA(r,g,b,a:integer);
- Procedure setcolor(q:integer);
- Procedure SetButtonColorRGBA(r,g,b,a:integer);
- Procedure setbuttoncolor(q:integer);
- Procedure SeteditColorRGBA(r,g,b,a:integer);
- Procedure seteditcolor(q:integer);
- Procedure SetWindowColorRGBA(r,g,b,a:integer);
- Procedure setwindowcolor(q:integer);
- Procedure SetLabelColorRGBA(r,g,b,a:integer);
- Procedure setlabelcolor(q:integer);
- Procedure PutPixelRGBA(x,y,r,g,b,a:integer);
- Procedure PutPixel(x,y,c:integer);
- Procedure Line(x1,y1,x2,y2:integer);
- Procedure HideMouse;
- Procedure ShowMouse;
- Procedure ShowCursor(toggle:integer);{0 - hide, 1 - show==hidemouse or showmouse}
-{ Procedure Linew(x1,y1,x2,y2,w:integer);}
- Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean);
- Procedure DrawPicButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean; p:pointer; sx,sy:integer);
- Procedure DrawWindow(x1,y1,x2,y2:integer);
- Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
- Procedure Ramka(x1,y1,x2,y2:integer);
- Procedure Rectangle(x1,y1,x2,y2:integer);
- Procedure Bar(x1,y1,x2,y2:integer);
- Procedure Ellipse(x,y:integer; rx,ry:real);
- Procedure fillEllipse(x,y:integer; rx,ry:real);
- Procedure circle(x,y:integer; r:real);
- Procedure Circlef(x,y:integer; r:real);
- Procedure InitAll(mode:word;Name_:Pchar);
- Procedure InitAllX(x,y:word;full:boolean;Name_:pchar);
- Procedure InitWindow(full:boolean;name_:pchar);
- Procedure InitSdl;
- Procedure DoneAll;
- Procedure Delay(n:word);
- Procedure setwsize(x1,y1,x2,y2:integer);
- Function TextWidth(s:ansistring):word;
- Function TextHeight(s:ansistring):word;
- Procedure outtextxy(x,y:integer; text:ansistring);
- Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b:integer);
- Procedure loadfont(name_:pansichar; ptsize:longint);
- Procedure drawedit(x1,y1,x2,y2:integer; text:ansistring);
- Function LoadImage1(s:PAnsiChar):pointer;
- Procedure PutImage1(x,y:integer; a:pointer);
- Function LoadSpr1(var f:file):pointer;
- Function LoadSpr(s:string):pointer;
- Procedure PutImage(x,y:integer;p:pimg;type_:byte);
- Procedure PutSprite(x,y:integer; p:pointer);
- Procedure UpdateScreen;
- Procedure ClearScreen;
- Function GetPixel(x,y:integer):byte;
-const
+ {System}
+  Procedure ChangeDebug(b:boolean);{Default = false; Show debug messages}
+  Procedure InitSDL;{Init SDL2 only}
+  Procedure InitWindow(full:boolean;name_:pchar);{Create only window,to set size change apw and aph}
+  Procedure InitAll(mode:word;Name_:Pchar);{Init sdl and window with selected mode and name}
+  Procedure InitAllX(x,y:word;full:boolean;Name_:pchar);{Same but with custom settings}
+  Procedure DoneAll;{Destroy window and done SDL2}
+  Procedure Delay(n:word);{Sleep for n ms}
+
+
+ {Mouse}
+  Procedure HideMouse;
+  Procedure ShowMouse;
+  Procedure ShowCursor(toggle:integer);{0 - hide, 1 - show}
+
+ {Drawing on screen}
+  Procedure UpdateScreen;
+  Procedure ClearScreen;
+  Procedure SetWSize(x1,y1,x2,y2:integer);{Set output size(ViewPort)}
+
+
+ {Gui primitives}
+  Procedure SetButtonColorRGBA(r,g,b,a:integer);
+  Procedure SetButtonColor(q:integer);
+  Procedure SetEditColorRGBA(r,g,b,a:integer);
+  Procedure SetEditColor(q:integer);
+  Procedure SetWindowColorRGBA(r,g,b,a:integer);
+  Procedure SetWindowColor(q:integer);
+  Procedure SetLabelColorRGBA(r,g,b,a:integer);
+  Procedure SetLabelColor(q:integer);
+  Procedure DrawEdit(x1,y1,x2,y2:integer; text:ansistring);
+  Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean);
+  Procedure DrawPicButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean; p:pointer; sx,sy:integer);
+  Procedure DrawWindow(x1,y1,x2,y2:integer);
+  Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
+  Procedure Ramka(x1,y1,x2,y2:integer);
+
+
+ {Graphics primitives}
+  Procedure SetColorRGBA(r,g,b,a:integer);{Set color for graphics primitives}
+  Procedure SetColor(q:integer);{Same, but color sets in old module vesa palette}
+  Procedure PutPixelRGBA(x,y,r,g,b,a:integer);
+  Procedure PutPixel(x,y,c:integer);
+  Procedure Line(x1,y1,x2,y2:integer);
+  Procedure Rectangle(x1,y1,x2,y2:integer);
+  Procedure Bar(x1,y1,x2,y2:integer);
+  Procedure Ellipse(x,y:integer; rx,ry:real);
+  Procedure FillEllipse(x,y:integer; rx,ry:real);
+  Procedure Circle(x,y:integer; r:real);
+  Procedure CircleF(x,y:integer; r:real);
+  Function GetPixel(x,y:integer):tColor;
+
+ {Drawing text}
+  Procedure LoadFont(name_:pansichar; ptsize:longint);{You must load font before draw text!!}
+  Procedure OutTextXY(x,y:integer; text:ansistring);
+  Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b:integer);
+  Function TextWidth(s:ansistring):word;{Get Width of current text}
+  Function TextHeight(s:ansistring):word;{Get Height of current text}
+
+
+ {Images}
+  Function LoadImage1(s:PAnsiChar):pointer;{Load new formats of images (JPG,PNG,TIF)}
+  Procedure PutImage1(x,y:integer; a:pointer);{Draw it}
+  Procedure PutImage(x,y:integer;p:pimg;type_:byte);
+  {Same. Type_=NormalPut - just draw image
+         Type_=ShadowPut - draw shadow of image}
+
+  Procedure PutSprite(x,y:integer; p:pointer);{For backward compatibility}
+
+  Function LoadSpr(s:string):pointer;{Loading old sprites from vesa module}
+  Function LoadSpr1(var f:file):pointer;{Same but load from file variable}
+
+const{This is palette for compatibility with old Vesa Module}
+     {It may be change in future versions}
  pal:array[0..255] of tsdl_color=(
- (r:123; g:123; b:123; a:0),(r:0; g:0; b:168; a:255),(r:0; g:168; b:0; a:255), {Vesa Palette. Its look's terrible}
+ (r:123; g:123; b:123; a:0),(r:0; g:0; b:168; a:255),(r:0; g:168; b:0; a:255),
  (r:0; g:168; b:168; a:255),(r:168; g:0; b:0; a:255),(r:168; g:0; b:168; a:255),(r:168; g:84; b:0; a:255),
  (r:168; g:168; b:168; a:255),(r:84; g:84; b:84; a:255),(r:84; g:84; b:255; a:255),(r:84; g:255; b:84; a:255),
  (r:84; g:255; b:255; a:255),(r:255; g:84; b:84; a:255),(r:255; g:84; b:255; a:255),(r:255; g:255; b:84; a:255),
@@ -171,10 +187,9 @@ const
  (r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),
  (r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),
  (r:0; g:0; b:0; a:255));
- var apw,aph:integer; window:pointer;
+ var apw,aph:integer;{Width and height of application windown} window:pointer;{Pointer to window}
 Implementation
- const cirseg=500;
-       MagicNumber=0.375; {0.375}
+ const cirseg=500;{Quality of circles and ellipses; In future versions will be removed}
        {$ifdef ENDIAN_BIG}
          rmask:longword=$ff000000;
          gmask:longword=$00ff0000;
@@ -186,16 +201,8 @@ Implementation
          bmask:longword=$00ff0000;
          amask:longword=$ff000000;
        {$endif}
-
- Type ref=^node;
-      node=record
-            s:^sprite;
-            next:ref;
-           end;
-      pxls=array of array of byte;
- var inz:ref; wx1,wx2,wy1,wy2:integer;
-     font:pointer;
-     screenwidth,screenheight:integer;color,buttoncolor,windowcolor,labelcolor,editcolor:tcolor; render:pointer;
+ var font:pointer;
+     color,buttoncolor,windowcolor,labelcolor,editcolor:tcolor; render:pointer;
      debug:boolean;
 procedure setcolorRGBA(r,g,b,a:integer);
  begin
@@ -213,36 +220,21 @@ Procedure SetColor(q:integer);
 
 Procedure ClearScreen;
  begin
-{  glClear(GL_COLOR_BUFFER_BIT);}
   SDL_SetRenderDrawColor( render, 0, 0, 0, 255 );
-  sdl_renderclear(render);
+  SDL_RenderClear(render);
   SDL_SetRenderDrawColor( render, color.r, color.g, color.b, color.a );
  end;
 
-{Function inw(x,y:integer):boolean;
- begin
-  inw:=(x>=wx1) and (x<=wx2) and (y<=wy2) and (y>=wy1);
- end;}
 
-procedure PutpixelRGBA(x,y,r,g,b,a:integer);
-{ var u,v:real; q:psdl_point;}
+Procedure PutpixelRGBA(x,y,r,g,b,a:integer);
  begin
-(*  if inw(x,y) then
-   begin
-    glBegin(GL_POINTS);
-    glColor4ub(color.r,color.g,color.b,color.a);
-    u:=real(x)+magicnumber{ / apw};
-    v:=real(y)+magicnumber{ / aph};
-    glVertex2f(u,v);
-    glEnd;
-   end;*)
   SDL_SetRenderDrawColor(render,r,g,b,a);
-  sdl_renderdrawpoint(render,x,y);
+  SDL_RenderDrawPoint(render,x,y);
   SDL_SetRenderDrawColor(render,color.r,color.g,color.b,color.a);
  end;
 procedure PutPixel(x,y,c:integer);
  begin
-  putpixelRGBA(x,y,pal[c].r,pal[c].g,pal[c].b,pal[c].a);
+  PutPixelRGBA(x,y,pal[c].r,pal[c].g,pal[c].b,pal[c].a);
  end;
 Procedure ShowCursor(toggle:integer);
  begin
@@ -256,165 +248,104 @@ Procedure ShowMouse;
  begin
   ShowCursor(1);
  end;
-{procedure Linew(x1,y1,x2,y2,w:integer);
- var u1,u2,v1,v2:real;
- begin
-  glLineWidth(w);
-  glBegin(GL_LINES);
-   glColor4ub(color.r,color.g,color.b,color.a);
-   u1:=magicnumber+x1;
-   u2:=magicnumber+x2;
-   v1:=magicnumber+y1;
-   v2:=magicnumber+y2;
-   glVertex2f(u1,v1);
-   glVertex2f(u2,v2);
-  glEnd;
- end;}
 
 procedure Line(x1,y1,x2,y2:integer);
  begin
-{  Linew(x1,y1,x2,y2,1);}
-  sdl_renderdrawline(render,x1,y1,x2,y2);
+  SDL_RenderDrawLine(render,x1,y1,x2,y2);
  end;
 
 Procedure Rectangle(x1,y1,x2,y2:integer);
- var q:psdl_rect;
+ var q:pSDL_Rect;
  begin
-  {line(x1,y1,x2,y1);
-  line(x1,y1,x1,y2);
-  line(x1,y2,x2,y2);
-  line(x2,y1,x2,y2);
-  putpixel(x2,y2);}
   new(q);
   q^.x:=x1;
   q^.y:=y1;
   q^.w:=x2-x1;
   q^.h:=y2-y1;
-  sdl_renderdrawrect(render,q);
+  SDL_RenderDrawRect(render,q);
   dispose(q);
  end;
 
 Procedure Bar(x1,y1,x2,y2:integer);
-var{ var u1,u2,v1,v2:real;} q:psdl_rect;
+var q:pSDL_Rect;
  begin
-{  glBegin(GL_QUADS);
-   glColor4ub(color.r,color.g,color.b,color.a);
-   u1:=-magicnumber/ abs(x2-x1)+x1 ;
-   u2:=magicnumber / abs(x2-x1)+x2;
-   v1:=-magicnumber / abs(y2-y1)+y1;
-   v2:=magicnumber / abs(y2-y1)+y2;
-   glVertex2f(u1,v1);
-   glVertex2f(u1,v2);
-   glVertex2f(u2,v2);
-   glVertex2f(u2,v1);
-  glEnd;}
   new(q);
   q^.x:=x1;
   q^.y:=y1;
   q^.w:=abs(x2-x1);
   q^.h:=abs(y2-y1);
-  sdl_renderfillrect(render,q);
+  SDL_RenderFillRect(render,q);
   dispose(q);
  end;
 
-Procedure Ellipse(x,y:integer; rx,ry:real);
- var i:integer; a,dx,dy:real;
+Procedure Ellipse(x,y:integer; rx,ry:real);{In future versions it will be}
+ var i:integer; a,dx,dy:real;              {use SDL2_gfx}
  begin
-{  glBegin(GL_LINE_LOOP);
-  glcolor4ub(color.r,color.g,color.b,color.a);}
    for i:=0 to cirseg do
     begin
      a:=2*pi*real(i)/real(cirseg);
      dx:=rx*cos(a);
      dy:=ry*sin(a);
-     sdl_renderdrawpoint(render,round(dx+x),round(dy+y));
-{     glVertex2f(dx+x,dy+y);}
+     SDL_RenderDrawPoint(render,round(dx+x),round(dy+y));
     end;
-{  glEnd;}
  end;
-procedure fillellipse(x,y:integer; rx,ry:real);
+procedure FillEllipse(x,y:integer; rx,ry:real);
  var i:integer; a,dx,dy:real;
  begin
-{  glBegin(GL_LINE_LOOP);
-  glcolor4ub(color.r,color.g,color.b,color.a);}
    for i:=0 to cirseg do
     begin
      a:=2*pi*real(i)/real(cirseg);
      dx:=rx*cos(a);
      dy:=ry*sin(a);
-
-{     glVertex2f(dx+x,dy+y);}sdl_renderdrawline(render,round(dx+x),round(dy+y),x,y);
+     SDL_RenderDrawLine(render,round(dx+x),round(dy+y),x,y);
     end;
-{  glEnd;}
  end;
-Procedure circle(x,y:integer; r:real);
- var i:integer; a,d:real;
+Procedure Circle(x,y:integer; r:real);
+ var i:integer; a:real;
  begin
-{  glBegin(GL_LINE_LOOP);
-   glcolor4ub(color.r,color.g,color.b,color.a);
    for i:=0 to cirseg do
     begin
      a:=2*pi*real(i)/real(cirseg);
-     if inw(integer(round(-cos(a)*r+x)),integer(round(-sin(a)*r+y))) then
-      glcolor4ub(color.r,color.g,color.b,color.a)
-      else
-      glcolor4ub(0,0,0,0);
-     glVertex2f(-cos(a)*r+x,-sin(a)*r+y);
-    end;
-  glEnd;}
-   for i:=0 to cirseg do
-    begin
-     a:=2*pi*real(i)/real(cirseg);
-   {  if inw(integer(round(-cos(a)*r+x)),integer(round(-sin(a)*r+y))) then}
-      sdl_renderdrawpoint(render,round(-cos(a)*r+x),round(-sin(a)*r+y));
- {     glcolor4ub(color.r,color.g,color.b,color.a)
-      else
-      glcolor4ub(0,0,0,0);
-     glVertex2f(-cos(a)*r+x,-sin(a)*r+y);}
+     SDL_RenderDrawPoint(render,round(-cos(a)*r+x),round(-sin(a)*r+y));
     end;
  end;
 
 Procedure Circlef(x,y:integer; r:real);
  var i:integer; a:real;
  begin
- { glBegin(GL_TRIANGLE_FAN);
-   glColor4ub(color.r,color.g,color.b,color.a);
-   glVertex2i(x,y);}
    for i:=0 to cirseg do
     begin
      a:=real(i/cirseg*pi*2);
-     sdl_renderdrawline(render,round(-cos(a)*r+x),round(-sin(a)*r+y),x,y);
-     {glVertex2f(real(x-cos(a)*r),real(y-sin(a)*r));}
+     SDL_RenderDrawLine(render,round(-cos(a)*r+x),round(-sin(a)*r+y),x,y);
     end;
-{  glEnd;}
  end;
 
-Procedure outerrorinit;
+Procedure OutError;
  begin
-  writeln('Error While Initialization SDL');
+  writeln('Some error happened');
   halt(1);
  end;
 
-Procedure loadfont(name_:pansichar; ptsize:longint);
+Procedure LoadFont(name_:pansichar; ptsize:longint);
  begin
-  if font<>nil then
-   ttf_closefont(font);
-  font:=ttf_openfont(name_,ptsize);
+  if Font<>nil then
+   TTF_CloseFont(font);
+  font:=TTF_OpenFont(name_,ptsize);
   if (font<>nil) and (debug) then writeln('Font ',name_,' successfully loaded')
    else
-    if font=nil then outerrorinit;
-  ttf_setfontstyle(font,TTF_style_bold);
+    if font=nil then OutError;
+  TTF_SetFontStyle(font,TTF_style_bold);
  end;
 
-Procedure setwsize(x1,y1,x2,y2:integer);
- var tmp:psdl_rect; e:integer;
+Procedure SetWSize(x1,y1,x2,y2:integer);
+ var tmp:pSDL_Rect; e:integer;
  begin
   new(tmp);
   tmp^.x:=x1;
   tmp^.y:=y1;
   tmp^.w:=x2-x1;
   tmp^.h:=y2-y1;
-  sdl_RenderSetViewPort(render,tmp);
+  SDL_RenderSetViewPort(render,tmp);
   dispose(tmp);
  end;
 
@@ -445,60 +376,36 @@ Procedure InitMode(mode:word);
  end;
 Procedure InitSDL;
  begin
- if sdl_init(SDL_INIT_VIDEO)<>0 then
-    outerrorinit
+ if SDL_Init(SDL_INIT_VIDEO)<>0 then
+    OutError
     else
-    if debug then writeln('Successfully loaded sdl');
+    if debug then writeln('Successfully loaded SDL2');
  end;
 procedure InitWindow(full:boolean;name_:pchar);
  var q:pointer;
  begin
-   InitSdl;
-   window:=sdl_CreateWindow(name_,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,apw,aph,(SDL_WINDOW_SHOWN) or (SDL_WINDOW_OPENGL));
+   InitSDL;
+   window:=SDL_CreateWindow(name_,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,apw,aph,(SDL_WINDOW_SHOWN) or (SDL_WINDOW_OPENGL));
    if full then
-    SDL_SetWINDOWFULLSCREEN(window,SDL_WINDOW_FULLSCREEN);
+    SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN);
    if window=nil then
-    outerrorinit
+    OutError
     else
     if debug then writeln('Successfully created window');
     render:=SDL_CreateRenderer(window, -1, (SDL_RENDERER_ACCELERATED or SDL_RENDERER_PRESENTVSYNC));
     if render=nil then
-	 outerrorinit
+         OutError
      else
       if debug then writeln('Successfully created sdl_render');
-(*   if SDL_GL_SetSwapInterval( 1 )<0 then
-    outerrorinit
-    else
-    writeln('Successfully initializated VSync');*)
-   {glViewport(0,0,apw,aph);
-   glMatrixMode( GL_PROJECTION );
-   glLoadIdentity;
-   glDisable(Gl_POINT_SMOOTH);}
-{   if apw<=aph then
-    gluOrtho2D(0,real(aph)*aph/real(apw),aph,0)
-    else                                     }
-   (*glOrtho(0,{real(apw)*apw/real(aph)}apw,aph,0,0,1.0);
-   glClearColor(0,0,0,0);
-   glMatrixMode(GL_MODELVIEW);
-   glEnable(GL_TEXTURE_2D);
-   glLoadIdentity;
-   glPixelZoom(1,1);
-   glPointSize(1);*)
    SDL_SetRenderDrawBlendMode( Render, SDL_BLENDMODE_blend );
-{   glclear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT);}
-   {SDL_RenderClear(render);}
    TTF_INIT;
    font:=nil;
-   (*glEnable(GL_BLEND);
-   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-   glDepthMask(GL_FALSE);*)
-{   glTranslatef(0.375,0.375,0);}
-   setcolorRGBA(0,0,0,255);
-   setwsize(0,0,apw,aph);
-   clearscreen;
-   updatescreen;
-   img_init(IMG_INIT_JPG or IMG_INIT_PNG or IMG_INIT_TIF);
-   if debug then writeln(img_GetError);
+   SetColorRGBA(0,0,0,255);
+   SetWSize(0,0,apw,aph);
+   ClearScreen;
+   UpdateScreen;
+   IMG_Init(IMG_INIT_JPG or IMG_INIT_PNG or IMG_INIT_TIF);
+   if debug then writeln(IMG_GetError);
    if debug then Writeln('Everything Done. Ready to work.')
 end;
 
@@ -517,129 +424,51 @@ Procedure InitAllX(x,y:word;full:boolean;name_:pchar);
   InitWindow(full,Name_);
  end;
 
-function textwidth(s:ansistring):word;
+function TextWidth(s:ansistring):word;
  var t,t1:plongint;
  begin
   new(t); new(t1);
-  ttf_sizeutf8(font,pansichar(s),t,t1);
-  textwidth:=t^;
+  TTF_SizeUTF8(font,pansichar(s),t,t1);
+  TextWidth:=t^;
   dispose(t);
   dispose(t1);
  end;
 
-function textheight(s:ansistring):word;
+function TextHeight(s:ansistring):word;
  var t,t1:plongint;
  begin
   new(t); new(t1);
-  ttf_sizeutf8(font,pansichar(s),t,t1);
-  textheight:=t1^;
+  TTF_SizeUTF8(font,pansichar(s),t,t1);
+  TextHeight:=t1^;
   dispose(t);
   dispose(t1);
  end;
 
-(*Procedure render_text(x,y:integer; text:ansistring; r,g,b:integer);
- var textsurf:psdl_surface; textureformat:glenum;  texture:pgluint; tex:psdl_texture;  q:pUint16; w,h:longint; textcolor,bg:tsdl_color;
-  tx,ty,tx2,ty2:real;
+procedure Render_Text(x,y:integer;text:ansistring; r,g,b:integer);
+ var surf:pSDL_Surface; color:tSDL_Color; tex:pSDL_Texture; rect:tSDL_Rect;
  begin
- { glTranslatef(0,0,0);}
-  if text<>'' then
-   begin
-    textcolor.a:=255;
-    textcolor.r:=b; {Why r:=b and b:=r? Because thats how it's working}
-    textcolor.g:=g;
-    textcolor.b:=r;
-    bg.a:=255;
-    bg.r:=255;
-    bg.g:=0;
-    bg.b:=0;
-    {textsurf:=nil;
-    new(textsurf);   }
-    if font=nil then
-     begin
-      writeln('Font is loaded?');
-      halt(1);
-     end;
-    TTF_SetFontStyle(font,TTF_STYLE_ITALIC);
-{    TTF_SetFontOutline(font,TTF_HINTING_LIGHT);
-    TTF_SeTFontHinting(font,TTF_HINTING_NORMAL);}
-    glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_ALPHA);
-    textsurf:=(ttf_renderutf8_shaded(font,pchar(text+#0),textcolor,bg));
-    case textsurf^.format^.bytesperpixel of
-     1:textureformat:=gl_alpha;
-     3:if textsurf^.format^.rmask=$000000ff then
-         textureformat:=gl_rgb
-         else
-         textureformat:=$80E0;
-     4:if textsurf^.format^.rmask=$000000ff then
-         textureformat:=gl_rgba
-         else
-         textureformat:=$80E1;
-    end;
-    if textsurf=nil then
-    begin
-    writeln('error rendering font');
-    halt(0);
-    end;
-{    tex:=sdl_createtexturefromsurface(nil,textsurf);}
-    new(texture);
-    glEnable(GL_TEXTURE_2D);
-    glGenTextures(1,texture);
-{    sdl_gl_BindTexture(tex,nil,nil);}
-    w:=textsurf^.w;
-    h:=textsurf^.h;
-    glBindTexture(GL_TEXTURE_2D,texture^);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D,0,textsurf^.format^.bytesperpixel,textsurf^.w,textsurf^.h,0,textureformat,GL_UNSIGNED_BYTE,textsurf^.pixels);
-    {glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);}
-{    gltexfromsurface(textsurf,texture,gl_rgba);                       }
-    SDL_FreeSurface(textsurf);
-    {if textsurf<>nil then
-     dispose(textsurf);}
-   tx:=(real(x)/w);
-   ty:=(real(y)/h);
-   tx2:=(real(x+w)/w);
-   ty2:=(real(y+h)/h);
-   glBegin(Gl_QUADS);
-    glColor4ub(255,255,255,255);
-    glTexCoord2f(tx,ty); glVertex2i(x,y);
-    glTexCoord2f(tx2,ty); glVertex2i(x+w,y);
-    glTexCoord2f(tx2,ty2); glVertex2i(x+w,y+h);
-    glTexCoord2f(tx,ty2); glVertex2i(x,y+h);
-   glEnd;
-   glDeletetextures(1,texture);
-   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-   glDisable(GL_TEXTURE_2D);
-{   if texture<>nil then
-    Dispose(texture);}
-{   sdl_destroytexture(tex);}
-  end;
-{  glTranslatef(0.375,0.375,0);}
- end;*)
-procedure render_text(x,y:integer;text:ansistring; r,g,b:integer);
- var surf:psdl_surface; color:tsdl_color; tex:psdl_texture; rect:tsdl_rect;
- begin
-  if text<>'' then
+  if (text<>'') and (font<>nil) then
    begin
     color.r:=r;
     color.g:=g;
     color.b:=b;
-    surf:=ttf_renderutf8_solid(font,pchar(text),color);
-    tex:=sdl_createtexturefromsurface(render,surf);
+    surf:=TTF_RenderUTF8_Solid(font,pchar(text),color);
+    tex:=SDL_CreateTextureFromSurface(render,surf);
     rect.x:=x;
     rect.y:=y;
     rect.w:=surf^.w;
     rect.h:=surf^.h;
-    sdl_rendercopy(render,tex,nil,@rect);
-    SDL_freesurface(surf);
-    SDL_destroytexture(tex);
+    SDL_RenderCopy(render,tex,nil,@rect);
+    SDL_FreeSurface(surf);
+    SDL_DestroyTexture(tex);
    end;
+  if (font=nil) and (debug) then
+   writeln('Font dont loaded');
  end;
 
-Procedure outtextxycolored(x,y:integer; text:ansistring; r,g,b:integer);
+Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b:integer);
  begin
-  render_text(x,y,text,r,g,b);
+  Render_Text(x,y,text,r,g,b);
  end;
 
 Procedure OutTextXY(x,y:integer; text:ansistring);
@@ -651,9 +480,9 @@ Procedure OutTextXY(x,y:integer; text:ansistring);
 Procedure DoneAll;
  begin
   if font<>nil then
-   ttf_closefont(font);
-  ttf_quit;
-  img_quit;
+   TTF_CloseFont(font);
+  TTF_Quit;
+  IMG_Quit;
   SDL_DestroyWindow(window);
   SDL_Quit();
  end;
@@ -666,134 +495,58 @@ Function LoadImage1(s:PAnsiChar):pointer;
  var q:psdl_surface; w:psdl_texture; a:^img;
  begin
   q:=Img_Load(pchar(s));
-  w:=sdl_createtexturefromsurface(render,q);
+  w:=SDL_CreateTextureFromSurface(render,q);
   new(a);
   a^.rect.w:=q^.w;
   a^.rect.h:=q^.h;
   a^.image:=w;
   SDL_freesurface(q);
-  loadimage1:=a;
-{  writeln(sdl_geterror); }
+  LoadImage1:=a;
  end;
+
 Procedure PutImage1(x,y:integer; a:pointer);
  var p:^img;
  begin
-  setcolorRGBA(255,255,255,255);
+  SetColorRGBA(255,255,255,255);
   p:=a;
   p^.rect.x:=x;
   p^.rect.y:=y;
   SDL_RenderCopy(render,p^.image,nil,@p^.rect);
  end;
 
-Procedure addinspritelist(p:pointer);
- var tz:ref;
- begin
-  tz:=inz;
-  while tz^.next<>nil do
-   tz:=tz^.next;
-  new(tz^.next);
-  tz:=tz^.next;
-  tz^.s:=p;
-  tz^.next:=nil;
- end;
-
-(*Procedure genbmp(p:psprite);
- var f:file; b:word; size,q:longword; e:longint;
- const headersize=14; infoheadersize=40;
- begin
-  size:=headersize+infoheadersize;
-  assign(f,'____sprtemp.$$$');
-  rewrite(f,1);
-  bmpheader
-  b:=19778; {19778='BM' in hex}
-  blockwrite(f,b,2); {writing bm in bmpheader}
-  blockwrite(f,size,2);
-  b:=0;
-  blockwrite(f,b,2);{reserved in bmp}
-  blockwrite(f,b,2);{reserved}
-
-
-  DIB header
-  q:=40;
-  blockwrite(f,q,4);
-  e:=p^.spritex;
-  blockwrite(f,e,4);{width}
-  e:=p^.spritey;
-  blockwrite(f,e,4);{height}
-  b:=1;
-  blockwrite(f,b,2);{colorplanes}
-  b:=8;
-  blockwrite(f,b,2);{depth of image}
-  q:=0;
-  blockwrite(f,q,4);{bl_rgb}
-  q:=p^.spritex*p^.spritey;
-  blockwrite(f,q,4);{imagesize}
-  e:=96;
-  blockwrite(f,e,4);{pixel per meter hor}
-  blockwrite(f,e,4);{ppm vert}
-  close(f);
- end;            *)
-
-(*Function Loadspr1(var f:file):pointer;
- var i,j:integer; a:^sprite; e:pointer; realsize:longint; q:byte;
- begin
-  new(a);
-  BlockRead(f,a^.spritex,2);
-  BlockRead(f,a^.spritey,2);
-  BlockRead(f,realsize,2);
-  BlockRead(f,q,2);
-  blockread(f,q,2);
-  setlength(a^.link,a^.spritey,a^.spritex);
-  i:=0;
-  j:=0;
-  while realsize
-    begin
-     blockread(f,a^.link[i,j],1);
-    end;
-  e:=a;
-  loadspr1:=e;
-  {writeln('Sprite successfully loaded');}
- end;*)
 function _get_pixel32(surf:tsdl_surface;x,y:integer):uint32;
  var pixels:puint32;
  begin
   pixels:=puint32(surf.pixels);
   _get_pixel32:=pixels[(y*surf.w)+x];
  end;
+
 procedure _put_pixel32(surf:tsdl_surface;x,y:integer;pxl:uint32);
  var pixels:puint32;
  begin
   pixels:=puint32(surf.pixels);
   pixels[(y*surf.w)+x]:=pxl;
  end;
+
 Function Loadspr1(var f:file):pointer;
  type par=array of longword;
       par1=array of word;
  var i,j:word; a:^par; e:pointer; realsize:longint; q:byte; spritex,spritey:word;
- w:psdl_surface; s:psdl_texture; aa:^img;ww:string; asd:longword; qq:boolean;
+ w:psdl_surface; s:psdl_texture; aa:^img; ww:string; asd:longword; qq:boolean;
  c,b,n:longword;
  begin
- { new(a);}
   BlockRead(f,spritex,2);
   BlockRead(f,spritey,2);
   BlockRead(f,realsize,2);
   BlockRead(f,q,2);
   blockread(f,q,2);
- { writeln(1);}
   new(a);
-{  writeln(2);}
-{   writeln([0],' ',a[1],' ',a[2],' ',a[3],' ',a[4]);}
-{  e:=a;}
-{  loadspr1:=e;}
-  {writeln('Sprite successfully loaded');}
-{  w:=sdl_creatergbsurfacefrom(sdl_maprgb(sdl_rgb,$ff,$ff,$ff),spritex,spritey,24,spritey*3,rmask,gmask,bmask,0);}
-  w:=sdl_creatergbsurface(0,spritex,spritey,32,rmask,gmask,bmask,amask);
-  if sdl_mustlock(w) then
+  w:=SDL_CreateRGBSurface(0,spritex,spritey,32,rmask,gmask,bmask,amask);
+  if SDL_MustLock(w) then
    begin
-    sdl_locksurface(w);
+    SDL_LockSurface(w);
     qq:=true;
    end;
-{  w^.pixels:=a;}
   if w=nil then
    begin
     writeln('Error gen surface');
@@ -815,29 +568,18 @@ Function Loadspr1(var f:file):pointer;
      {$else}
      _put_pixel32(w^,i,j,c or (b shl 8) or (n shl 16) or (asd shl 24));
      {$endif}
-{     _put_pixel32(w^,i,j,$ffffff00 or asd);}
-{     a^[i]:=255;
-     a^[i+1]:=255;
-     a^[i+2]:=255; }
     end;
   if qq then
-   sdl_unlocksurface(w);
-  s:=sdl_createtexturefromsurface(render,w);
+   SDL_UnlockSurface(w);
+  s:=SDL_CreateTextureFromSurface(render,w);
   new(aa);
   aa^.rect.w:=w^.w;
   aa^.rect.h:=w^.h;
   aa^.image:=s;
-   SDL_freesurface(w);
-{  ww:='1';
-  while ww<>'' do
-   begin
-    if ww<>'1' then
-     writeln(ww);
-    ww:=sdl_geterror;
-   end;                                            }
-  loadspr1:=aa;
-{  writeln(5);  }
-end;
+   SDL_FreeSurface(w);
+  LoadSpr1:=aa;
+ end;
+
 Function LoadSpr(s:string):pointer;
  var f:file;
  begin
@@ -846,34 +588,19 @@ Function LoadSpr(s:string):pointer;
   LoadSpr:=LoadSpr1(f);
   close(f);
  end;
-(*Procedure ptimg(x,y:integer;a:psprite; var pixels; type_:byte);
- var i,j:integer;
- begin
 
- end;                         *)
 Procedure PutImage(x,y:integer;p:pimg;type_:byte);
- var a:^sprite; i,j:integer; shadow:boolean;
  begin
-  (*a:=p;
-  for i:=0 to a^.spritey-1 do
-   for j:=0 to a^.spritex-1 do
-    begin
-     case type_ of
-      NormalPut:setcolor256({a^.link[i][j].r,a^.link[i][j].g,a^.link[i][j].b,a^.link[i][j].a}a^.link[i,j]);
-      ShadowPut:setcolor(0,0,0,pal[a^.link[i][j]].a div 2);
-     end;
-     putpixel(x+j,y+i);
-    end;*)
   if type_=shadowput then
    begin
-    sdl_settexturealphamod(p^.image,192);
-    sdl_settexturecolormod(p^.image,0,0,0);
+    SDL_SetTextureAlphaMod(p^.image,192);
+    SDL_SetTextureColorMod(p^.image,0,0,0);
    end;
-  putimage1(x,y,p);
+  PutImage1(x,y,p);
   if type_=shadowput then
    begin
-    sdl_settexturealphamod(p^.image,255);
-    sdl_settexturecolormod(p^.image,255,255,255);
+    SDL_SetTextureAlphaMod(p^.image,255);
+    SDL_SetTextureColorMod(p^.image,255,255,255);
    end;
  end;
 
@@ -887,9 +614,13 @@ Procedure UpdateScreen;
   SDL_RenderPresent(render);
  end;
 
-Function GetPixel(x,y:integer):byte;
+Function GetPixel(x,y:integer):tColor;
  begin
-  getpixel:=0;
+  {TODO: getting pixel from screen}
+  GetPixel.r:=0;
+  GetPixel.g:=0;
+  GetPixel.b:=0;
+  GetPixel.a:=0;
  end;
 
 procedure setbuttoncolorRGBA(r,g,b,a:integer);
@@ -912,8 +643,6 @@ Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:bool
   var tx,ty:integer; t,t1:longint;
   begin
    setcolorRGBA(buttoncolor.r,buttoncolor.g,buttoncolor.b,buttoncolor.a);
-{   bar(x1,y1,x2,y2);
-   setcolor(20,20,20,64);}
    bar(x1,y1,x2,y2);
    setcolorRGBA(20,20,20,64);
    if pressed then
@@ -965,6 +694,7 @@ Procedure Ramka(x1,y1,x2,y2:integer);
   line(x1,y2,x2,y2);
   line(x2,y1,x2,y2);
  end;
+
 Procedure drawwindow(x1,y1,x2,y2:integer);
  begin
   ramka(x1,y1,x2,y2);
@@ -1031,21 +761,23 @@ Procedure SetlabelColor(q:integer);
  begin
   setlabelcolorRGBA(pal[q].r,pal[q].g,pal[q].b,pal[q].a);
  end;
+
 Procedure SetwindowColor(q:integer);
  begin
   setwindowcolorRGBA(pal[q].r,pal[q].g,pal[q].b,pal[q].a);
  end;
+
 Procedure SetbuttonColor(q:integer);
  begin
   setbuttoncolorRGBA(pal[q].r,pal[q].g,pal[q].b,pal[q].a);
  end;
 
-Procedure changedebug(b:boolean);
+Procedure ChangeDebug(b:boolean);
  begin
   debug:=b;
  end;
 
-Procedure drawedit(x1,y1,x2,y2:integer;text:ansistring);
+Procedure DrawEdit(x1,y1,x2,y2:integer;text:ansistring);
  var text1:ansistring;x,y:integer;
  begin
   setcolorRGBA(editcolor.r,editcolor.g,editcolor.b,editcolor.a);
@@ -1083,5 +815,5 @@ Procedure drawedit(x1,y1,x2,y2:integer;text:ansistring);
     if text<>'' then outtextxy(x,y,text);
  end;
 begin
- debug:=false;
+ Debug:=false;
 end.
