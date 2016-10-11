@@ -28,34 +28,34 @@ Const
    l+m=4
    l+r=5
    m+r=6 l+m+r=7}
-  {here is long column of constants. If you want to see something else then go to line 226}
-  kwtf=SDL_SCANCODE_UNKNOWN;
-  ka=SDL_SCANCODE_A;
-  kb=SDL_SCANCODE_B;
-  kc=SDL_SCANCODE_C;
-  kd=SDL_SCANCODE_D;
-  ke=SDL_SCANCODE_E;
-  kf=SDL_SCANCODE_F;
-  kg=SDL_SCANCODE_G;
-  kh=SDL_SCANCODE_H;
-  ki=SDL_SCANCODE_I;
-  kj=SDL_SCANCODE_J;
-  kk=SDL_SCANCODE_K;
-  kl=SDL_SCANCODE_L;
-  km=SDL_SCANCODE_M;
-  kn=SDL_SCANCODE_N;
-  ko=SDL_SCANCODE_O;
-  kp=SDL_SCANCODE_P;
-  kq=SDL_SCANCODE_Q;
-  kr=SDL_SCANCODE_R;
-  ks=SDL_SCANCODE_S;
-  kt=SDL_SCANCODE_T;
-  ku=SDL_SCANCODE_U;
-  kv=SDL_SCANCODE_V;
-  kw=SDL_SCANCODE_W;
-  kx=SDL_SCANCODE_X;
-  ky=SDL_SCANCODE_Y;
-  kz=SDL_SCANCODE_Z;
+  {here is long column of constants. If you want to see something else then go to line 269}
+  kUnknown=SDL_SCANCODE_UNKNOWN;
+  kA=SDL_SCANCODE_A;
+  kB=SDL_SCANCODE_B;
+  kC=SDL_SCANCODE_C;
+  kD=SDL_SCANCODE_D;
+  kE=SDL_SCANCODE_E;
+  kF=SDL_SCANCODE_F;
+  kG=SDL_SCANCODE_G;
+  kH=SDL_SCANCODE_H;
+  kI=SDL_SCANCODE_I;
+  kJ=SDL_SCANCODE_J;
+  kK=SDL_SCANCODE_K;
+  kL=SDL_SCANCODE_L;
+  kM=SDL_SCANCODE_M;
+  kN=SDL_SCANCODE_N;
+  kO=SDL_SCANCODE_O;
+  kP=SDL_SCANCODE_P;
+  kQ=SDL_SCANCODE_Q;
+  kR=SDL_SCANCODE_R;
+  kS=SDL_SCANCODE_S;
+  kT=SDL_SCANCODE_T;
+  kU=SDL_SCANCODE_U;
+  kV=SDL_SCANCODE_V;
+  kW=SDL_SCANCODE_W;
+  kX=SDL_SCANCODE_X;
+  kY=SDL_SCANCODE_Y;
+  kZ=SDL_SCANCODE_Z;
   k1=SDL_SCANCODE_1;
   k2=SDL_SCANCODE_2;
   k3=SDL_SCANCODE_3;
@@ -66,113 +66,114 @@ Const
   k8=SDL_SCANCODE_8;
   k9=SDL_SCANCODE_9;
   k0=SDL_SCANCODE_0;
-  kenter=SDL_SCANCODE_RETURN;
-  kesc=SDL_SCANCODE_ESCAPE;
-  kbackspace=SDL_SCANCODE_BACKSPACE;
-  ktab=SDL_SCANCODE_TAB;
-  kspace=SDL_SCANCODE_SPACE;
-  kminus=SDL_SCANCODE_MINUS;
-  kequals=SDL_SCANCODE_EQUALS;
-  kleftbracket=SDL_SCANCODE_LEFTBRACKET; (*  '[ '  *)
-  krightbracket=SDL_SCANCODE_RIGHTBRACKET; (* ']'  *)
-  kbackslash=SDL_SCANCODE_BACKSLASH;
-  ktz=SDL_SCANCODE_SEMICOLON;  (*  ';'  *)
-  kapostrophe=SDL_SCANCODE_APOSTROPHE; (*  ' ' '  *)
+  kEnter=SDL_SCANCODE_RETURN;
+  kEsc=SDL_SCANCODE_ESCAPE;
+  kBackSpace=SDL_SCANCODE_BACKSPACE;
+  kTab=SDL_SCANCODE_TAB;
+  kSpace=SDL_SCANCODE_SPACE;
+  kMinus=SDL_SCANCODE_MINUS;
+  kEquals=SDL_SCANCODE_EQUALS;{ = }
+  kLeftBracket=SDL_SCANCODE_LEFTBRACKET; (*  '[ '  *)
+  kRightBracket=SDL_SCANCODE_RIGHTBRACKET; (* ']'  *)
+  kBackSlash=SDL_SCANCODE_BACKSLASH; { \ }
+  kSemicolon=SDL_SCANCODE_SEMICOLON;  (*  ';'  *)
+  kApostrophe=SDL_SCANCODE_APOSTROPHE; (*  ' ' '  *)
   {SDL_SCANCODE_GRAVE = 53;}
-  kzpt=SDL_SCANCODE_COMMA; { ',' }
-  kdot=SDL_SCANCODE_PERIOD; { '.' }
-  kslash=SDL_SCANCODE_SLASH;
-  kcaps=SDL_SCANCODE_CAPSLOCK;
-  kf1=SDL_SCANCODE_F1;
-  kf2=SDL_SCANCODE_F2;
-  kf3=SDL_SCANCODE_F3;
-  kf4=SDL_SCANCODE_F4;
-  kf5=SDL_SCANCODE_F5;
-  kf6=SDL_SCANCODE_F6;
-  kf7=SDL_SCANCODE_F7;
-  kf8=SDL_SCANCODE_F8;
-  kf9=SDL_SCANCODE_F9;
-  kf10=SDL_SCANCODE_F10;
-  kf11=SDL_SCANCODE_F11;
-  kf12=SDL_SCANCODE_F12;
+  kComma=SDL_SCANCODE_COMMA; { ',' }
+  kDot=SDL_SCANCODE_PERIOD; { '.' }
+  kSlash=SDL_SCANCODE_SLASH; { / }
+  kCaps=SDL_SCANCODE_CAPSLOCK;
+  kF1=SDL_SCANCODE_F1;
+  kF2=SDL_SCANCODE_F2;
+  kF3=SDL_SCANCODE_F3;
+  kF4=SDL_SCANCODE_F4;
+  kF5=SDL_SCANCODE_F5;
+  kF6=SDL_SCANCODE_F6;
+  kF7=SDL_SCANCODE_F7;
+  kF8=SDL_SCANCODE_F8;
+  kF9=SDL_SCANCODE_F9;
+  kF10=SDL_SCANCODE_F10;
+  kF11=SDL_SCANCODE_F11;
+  kF12=SDL_SCANCODE_F12;
 
-  kprtscr=SDL_SCANCODE_PRINTSCREEN;
-  kscrlock=SDL_SCANCODE_SCROLLLOCK;
-  kpause=SDL_SCANCODE_PAUSE;
-  kinsert=SDL_SCANCODE_INSERT;
+  kPrtScr=SDL_SCANCODE_PRINTSCREEN;
+  kScrLock=SDL_SCANCODE_SCROLLLOCK;
+  kPause=SDL_SCANCODE_PAUSE;
+  kInsert=SDL_SCANCODE_INSERT;
   kHome=SDL_SCANCODE_HOME;
-  kpgup=SDL_SCANCODE_PAGEUP;
-  kdel=SDL_SCANCODE_DELETE;
-  kend=SDL_SCANCODE_END;
-  kpgdown=SDL_SCANCODE_PAGEDOWN;
-  kright=SDL_SCANCODE_RIGHT;
-  kleft=SDL_SCANCODE_LEFT;
-  kdown=SDL_SCANCODE_DOWN;
-  kup=SDL_SCANCODE_UP;
+  kPgUp=SDL_SCANCODE_PAGEUP;
+  kDel=SDL_SCANCODE_DELETE;
+  kEnd=SDL_SCANCODE_END;
+  kPgDown=SDL_SCANCODE_PAGEDOWN;
+  kRight=SDL_SCANCODE_RIGHT;
+  kLeft=SDL_SCANCODE_LEFT;
+  kDown=SDL_SCANCODE_DOWN;
+  kUp=SDL_SCANCODE_UP;
 
-  knumlock=SDL_SCANCODE_NUMLOCKCLEAR;
-  knumdiv=SDL_SCANCODE_KP_DIVIDE; { / on numpad }
-  kmult=SDL_SCANCODE_KP_MULTIPLY; { * on numpad }
-  kkpminus=SDL_SCANCODE_KP_MINUS; { - on numpad }
-  kkpplus=SDL_SCANCODE_KP_PLUS ;  { + on numpad }
-  kkpenter=SDL_SCANCODE_KP_ENTER; { enter on numpad }
-  kkp1=SDL_SCANCODE_KP_1;         { 1 on numpad }
-  kkp2=SDL_SCANCODE_KP_2;         { 2 on numpad }
-  kkp3=SDL_SCANCODE_KP_3;         { 3 on numpad }
-  kkp4=SDL_SCANCODE_KP_4;         { 4 on numpad }
-  kkp5=SDL_SCANCODE_KP_5;         { 5 on numpad }
-  kkp6=SDL_SCANCODE_KP_6;         { 6 on numpad }
-  kkp7=SDL_SCANCODE_KP_7;         { 7 on numpad }
-  kkp8=SDL_SCANCODE_KP_8;         { 8 on numpad }
-  kkp9=SDL_SCANCODE_KP_9;         { 9 on numpad }
-  kkp0=SDL_SCANCODE_KP_0;         { 0 on numpad }
-  kkpdot=SDL_SCANCODE_KP_PERIOD;  { . on numpad }
+  kNumLock=SDL_SCANCODE_NUMLOCKCLEAR;
+  kNumDiv=SDL_SCANCODE_KP_DIVIDE;   { / on numpad }
+  kNumMul=SDL_SCANCODE_KP_MULTIPLY; { * on numpad }
+  kNumMinus=SDL_SCANCODE_KP_MINUS;  { - on numpad }
+  kNumPlus=SDL_SCANCODE_KP_PLUS ;   { + on numpad }
+  kNumEnter=SDL_SCANCODE_KP_ENTER;  { enter on numpad }
+  kNum1=SDL_SCANCODE_KP_1;          { 1 on numpad }
+  kNum2=SDL_SCANCODE_KP_2;          { 2 on numpad }
+  kNum3=SDL_SCANCODE_KP_3;          { 3 on numpad }
+  kNum4=SDL_SCANCODE_KP_4;          { 4 on numpad }
+  kNum5=SDL_SCANCODE_KP_5;          { 5 on numpad }
+  kNum6=SDL_SCANCODE_KP_6;          { 6 on numpad }
+  kNum7=SDL_SCANCODE_KP_7;          { 7 on numpad }
+  kNum8=SDL_SCANCODE_KP_8;          { 8 on numpad }
+  kNum9=SDL_SCANCODE_KP_9;          { 9 on numpad }
+  kNum0=SDL_SCANCODE_KP_0;          { 0 on numpad }
+  kNumDot=SDL_SCANCODE_KP_PERIOD;   { . on numpad }
+  kNumEquals=SDL_SCANCODE_KP_EQUALS;{ = on numpad }
+  kNumComma=SDL_SCANCODE_KP_COMMA;  { , on numpad }
+  kNumEQUALSAS400=SDL_SCANCODE_KP_EQUALSAS400;
 
   {SDL_SCANCODE_NONUSBACKSLASH = 100;}
-  kapp=SDL_SCANCODE_APPLICATION;
-  kpower=SDL_SCANCODE_POWER;
-  kkpequals=SDL_SCANCODE_KP_EQUALS; { = on numpad }
+  kApp=SDL_SCANCODE_APPLICATION;
+  kPower=SDL_SCANCODE_POWER;
 
-  kf13=SDL_SCANCODE_F13; { I dont know what means "f13", but i dont care}
-  kf14=SDL_SCANCODE_F14;
-  kf15=SDL_SCANCODE_F15;
-  kf16=SDL_SCANCODE_F16;
-  kf17=SDL_SCANCODE_F17;
-  kf18=SDL_SCANCODE_F18;
-  kf19=SDL_SCANCODE_F19;
-  kf20=SDL_SCANCODE_F20;
-  kf21=SDL_SCANCODE_F21;
-  kf22=SDL_SCANCODE_F22;
-  kf23=SDL_SCANCODE_F23;
-  kf24=SDL_SCANCODE_F24;
-  kexecute=SDL_SCANCODE_EXECUTE;
-  khelp=SDL_SCANCODE_HELP;
-  kmenu=SDL_SCANCODE_MENU;
-  kselect=SDL_SCANCODE_SELECT;
-  kstop=SDL_SCANCODE_STOP;
-  kagain=SDL_SCANCODE_AGAIN;
-  kundo=SDL_SCANCODE_UNDO;
-  kcut=SDL_SCANCODE_CUT;
-  kcopy=SDL_SCANCODE_COPY;
-  kpaste=SDL_SCANCODE_PASTE;
-  kfind=SDL_SCANCODE_FIND;
-  kmute=SDL_SCANCODE_MUTE;
-  kvolumeup=SDL_SCANCODE_VOLUMEUP;
-  kvolumedown=SDL_SCANCODE_VOLUMEDOWN;
-  kkpzpt=SDL_SCANCODE_KP_COMMA; { , on numpad }
-  kkpEQUALSAS400=SDL_SCANCODE_KP_EQUALSAS400;
 
-  kint1=SDL_SCANCODE_INTERNATIONAL1;
-  kint2=SDL_SCANCODE_INTERNATIONAL2;
-  kint3=SDL_SCANCODE_INTERNATIONAL3;
-  kint4=SDL_SCANCODE_INTERNATIONAL4;
-  kint5=SDL_SCANCODE_INTERNATIONAL5;
-  kint6=SDL_SCANCODE_INTERNATIONAL6;
-  kint7=SDL_SCANCODE_INTERNATIONAL7;
-  kint8=SDL_SCANCODE_INTERNATIONAL8;
-  kint9=SDL_SCANCODE_INTERNATIONAL9;
-  klang1=SDL_SCANCODE_LANG1;
-  {SDL_SCANCODE_LANG2 = 145  (* oh, just fuck it *)
+  kF13=SDL_SCANCODE_F13;
+  kF14=SDL_SCANCODE_F14;
+  kF15=SDL_SCANCODE_F15;
+  kF16=SDL_SCANCODE_F16;
+  kF17=SDL_SCANCODE_F17;
+  kF18=SDL_SCANCODE_F18;
+  kF19=SDL_SCANCODE_F19;
+  kF20=SDL_SCANCODE_F20;
+  kF21=SDL_SCANCODE_F21;
+  kF22=SDL_SCANCODE_F22;
+  kF23=SDL_SCANCODE_F23;
+  kF24=SDL_SCANCODE_F24;
+  kExecute=SDL_SCANCODE_EXECUTE;
+  kHelp=SDL_SCANCODE_HELP;
+  kMenu=SDL_SCANCODE_MENU;
+  kSelect=SDL_SCANCODE_SELECT;
+  kStop=SDL_SCANCODE_STOP;
+  kAgain=SDL_SCANCODE_AGAIN;
+  kUndo=SDL_SCANCODE_UNDO;
+  kCut=SDL_SCANCODE_CUT;
+  kCopy=SDL_SCANCODE_COPY;
+  kPaste=SDL_SCANCODE_PASTE;
+  kFind=SDL_SCANCODE_FIND;
+  kMute=SDL_SCANCODE_MUTE;
+  kVolumeUp=SDL_SCANCODE_VOLUMEUP;
+  kVolumeDown=SDL_SCANCODE_VOLUMEDOWN;
+
+  kInt1=SDL_SCANCODE_INTERNATIONAL1;
+  kInt2=SDL_SCANCODE_INTERNATIONAL2;
+  kInt3=SDL_SCANCODE_INTERNATIONAL3;
+  kInt4=SDL_SCANCODE_INTERNATIONAL4;
+  kInt5=SDL_SCANCODE_INTERNATIONAL5;
+  kInt6=SDL_SCANCODE_INTERNATIONAL6;
+  kInt7=SDL_SCANCODE_INTERNATIONAL7;
+  kInt8=SDL_SCANCODE_INTERNATIONAL8;
+  kInt9=SDL_SCANCODE_INTERNATIONAL9;
+  kLang1=SDL_SCANCODE_LANG1;
+  {SDL_SCANCODE_LANG2 = 145
   SDL_SCANCODE_LANG3 = 146;
   SDL_SCANCODE_LANG4 = 147;
   SDL_SCANCODE_LANG5 = 148;
@@ -241,15 +242,30 @@ Const
   SDL_SCANCODE_KP_DECIMAL = 220;
   SDL_SCANCODE_KP_HEXADECIMAL = 221;
                            }
-  kctrl = 224;
-  klctrlmod=kmod_lctrl;{ (*if you need it just uncomment and set it*)
-  SDL_SCANCODE_LSHIFT = 225;
-  SDL_SCANCODE_LALT = 226;
-  SDL_SCANCODE_LGUI = 227;
-  SDL_SCANCODE_RCTRL = 228;
-  SDL_SCANCODE_RSHIFT = 229;
-  SDL_SCANCODE_RALT = 230;
-  SDL_SCANCODE_RGUI = 231;}
+  kCtrl = 224;
+  kLCtrl = 224;
+  kRCtrl = 228;
+  kLCtrlMod=kMod_LCtrl;
+  kRCtrlMod=kMod_RCtrl;
+
+  kShift = 225;
+  kLShift = 225;
+  kRShift = 229;
+  kLShiftMod=kMod_LShift;
+  kRShiftMod=kMod_RShift;
+
+  kAlt = 226;
+  kLAlt = 226;
+  kRAlt = 230;
+  kLAltMod=kMod_LAlt;
+  kRAltMod=kMod_RAlt;
+
+  kGui = 227;
+  kLGui = 227;
+  KRGui = 231;
+  kLGuiMod=kMod_LGui;
+  kRGuiMod=kMod_RGui;
+
 type tkey=record
            key:tsdl_keysym;
            mod_:word;
@@ -266,11 +282,11 @@ Implementation
    new(event);
    if SDL_PollEvent(event)=1 then
     begin
-     if event^.type_=SDL_QUITEV then 
+     if event^.type_=SDL_QUITEV then
 	  begin
-	   sdl_quit;	  
+	   sdl_quit;
 	   halt(0);
-	  end; 
+	  end;
 	 if event^.type_=sdl_mousemotion then
       begin
        new(p);new(p1);                {left mouse button=1}
@@ -306,7 +322,7 @@ Implementation
  Function readkey(var x:ansistring):integer;
   begin
    if lastkey.key.sym<>-1 then
-    begin	 
+    begin	
      readkey:=lastkey.key.scancode+lastkey.mod_;
      x:=sdl_getkeyname(lastkey.key.sym);
      lastkey.key.sym:=-1;
@@ -326,5 +342,5 @@ Implementation
    countmousebuttonspressed:=0;
    inputupdate;
   end;
-begin  
+begin
 end.
