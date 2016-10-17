@@ -270,7 +270,7 @@ type tkey=record
            key:tsdl_keysym;
            mod_:word;
           end;
- var keys:PUint8; mousex,mousey:Longint; mousebutton,countmousebuttonspressed:integer;
+ var keys:PUint8; mousex,mousey,mouseScrollHor,mouseScrollVert:Longint; mousebutton,countmousebuttonspressed:integer;
      lastkey:tkey;
  Procedure InputInit;
  Procedure InputUpdate;
@@ -316,13 +316,23 @@ Implementation
        lastkey.key:=event^.key.keysym;
        lastkey.mod_:=sdl_getmodstate;
       end;
+     if Event^.type_=SDL_MOUSEWHEEL then
+      begin
+       mouseScrollHor:=Event^.wheel.x;
+       mouseScrollVert:=event^.wheel.y;
+      end
+      else
+      begin
+       mouseScrollHor:=0;
+       mouseScrollVert:=0;
+      end;
     end;
    dispose(event);
   end;
  Function readkey(var x:ansistring):integer;
   begin
    if lastkey.key.sym<>-1 then
-    begin	
+    begin
      readkey:=lastkey.key.scancode+lastkey.mod_;
      x:=sdl_getkeyname(lastkey.key.sym);
      lastkey.key.sym:=-1;
@@ -339,6 +349,8 @@ Implementation
    lastkey.key.sym:=-1;
    SDL_PumpEvents;
    mousebutton:=0;
+   mouseScrollHor:=0;
+   mouseScrollVert:=0;
    countmousebuttonspressed:=0;
    inputupdate;
   end;
