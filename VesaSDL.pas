@@ -20,7 +20,7 @@ freely, subject to the following restrictions:
 }
 Unit VesaSDL;
 Interface
- Uses SDL2,SDL2_image,SDL2_ttf;
+ Uses SDL2,SDL2_image,SDL2_ttf,SDL2_gfx;
  Const
   {windowed modes}
   M640x480=$100;
@@ -93,10 +93,10 @@ Interface
   Procedure Line(x1,y1,x2,y2:integer);
   Procedure Rectangle(x1,y1,x2,y2:integer);
   Procedure Bar(x1,y1,x2,y2:integer);
-  Procedure Ellipse(x,y:integer; rx,ry:real);
-  Procedure FillEllipse(x,y:integer; rx,ry:real);
-  Procedure Circle(x,y:integer; r:real);
-  Procedure CircleF(x,y:integer; r:real);
+  Procedure Ellipse(x,y,rx,ry:integer);
+  Procedure FillEllipse(x,y,rx,ry:integer);
+  Procedure Circle(x,y,r:integer);
+  Procedure CircleF(x,y,r:integer);
   Function GetPixel(x,y:integer):tColor;
 
  {Drawing text}
@@ -189,7 +189,7 @@ const{This is palette for compatibility with old Vesa Module}
  (r:0; g:0; b:0; a:255));
  var apw,aph:integer;{Width and height of application windown} window:pointer;{Pointer to window}
 Implementation
- const cirseg=500;{Quality of circles and ellipses; In future versions will be removed}
+ const
        {$ifdef ENDIAN_BIG}
          rmask:longword=$ff000000;
          gmask:longword=$00ff0000;
@@ -255,69 +255,31 @@ procedure Line(x1,y1,x2,y2:integer);
  end;
 
 Procedure Rectangle(x1,y1,x2,y2:integer);
- var q:pSDL_Rect;
  begin
-  new(q);
-  q^.x:=x1;
-  q^.y:=y1;
-  q^.w:=x2-x1;
-  q^.h:=y2-y1;
-  SDL_RenderDrawRect(render,q);
-  dispose(q);
+  rectangleRGBA(render,x1,y1,x2,y2,color.r,color.g,color.b,color.a);
  end;
 
 Procedure Bar(x1,y1,x2,y2:integer);
-var q:pSDL_Rect;
  begin
-  new(q);
-  q^.x:=x1;
-  q^.y:=y1;
-  q^.w:=abs(x2-x1);
-  q^.h:=abs(y2-y1);
-  SDL_RenderFillRect(render,q);
-  dispose(q);
+  boxRGBA(render,x1,y1,x2,y2,color.r,color.g,color.b,color.a);
  end;
 
-Procedure Ellipse(x,y:integer; rx,ry:real);{In future versions it will be}
- var i:integer; a,dx,dy:real;              {use SDL2_gfx}
+Procedure Ellipse(x,y,rx,ry:integer);
  begin
-   for i:=0 to cirseg do
-    begin
-     a:=2*pi*real(i)/real(cirseg);
-     dx:=rx*cos(a);
-     dy:=ry*sin(a);
-     SDL_RenderDrawPoint(render,round(dx+x),round(dy+y));
-    end;
+  ellipseRGBA(render,x,y,rx,ry,color.r,color.g,color.b,color.a);
  end;
-procedure FillEllipse(x,y:integer; rx,ry:real);
- var i:integer; a,dx,dy:real;
+procedure FillEllipse(x,y,rx,ry:integer);
  begin
-   for i:=0 to cirseg do
-    begin
-     a:=2*pi*real(i)/real(cirseg);
-     dx:=rx*cos(a);
-     dy:=ry*sin(a);
-     SDL_RenderDrawLine(render,round(dx+x),round(dy+y),x,y);
-    end;
+   filledEllipseRGBA(render,x,y,rx,ry,color.r,color.g,color.b,color.a);
  end;
-Procedure Circle(x,y:integer; r:real);
- var i:integer; a:real;
+Procedure Circle(x,y,r:integer);
  begin
-   for i:=0 to cirseg do
-    begin
-     a:=2*pi*real(i)/real(cirseg);
-     SDL_RenderDrawPoint(render,round(-cos(a)*r+x),round(-sin(a)*r+y));
-    end;
+   circleRGBA(render,x,y,r,color.r,color.g,color.b,color.a);
  end;
 
-Procedure Circlef(x,y:integer; r:real);
- var i:integer; a:real;
+Procedure Circlef(x,y,r:integer);
  begin
-   for i:=0 to cirseg do
-    begin
-     a:=real(i/cirseg*pi*2);
-     SDL_RenderDrawLine(render,round(-cos(a)*r+x),round(-sin(a)*r+y),x,y);
-    end;
+  filledCircleRGBA(render,x,y,r,color.r,color.g,color.b,color.a);
  end;
 
 Procedure OutError;
@@ -514,11 +476,11 @@ Procedure PutImage1(x,y:integer; a:pointer);
   SDL_RenderCopy(render,p^.image,nil,@p^.rect);
  end;
 
-function _get_pixel32(surf:tsdl_surface;x,y:integer):uint32;
+function _get_pixel32(surf:psdl_surface;x,y:integer):uint32;
  var pixels:puint32;
  begin
-  pixels:=puint32(surf.pixels);
-  _get_pixel32:=pixels[(y*surf.w)+x];
+  pixels:=puint32(surf^.pixels);
+  _get_pixel32:=pixels[(y*surf^.w)+x];
  end;
 
 procedure _put_pixel32(surf:tsdl_surface;x,y:integer;pxl:uint32);
@@ -564,7 +526,7 @@ Function Loadspr1(var f:file):pointer;
       else
       asd:=0;
      {$ifdef ENDIAN_BIG}
-     _put_pixel32(w^,i,j,(c shl 16)or (b shl 16) or (n shl 8) or asd);
+     _put_pixel32(w^,i,j,(c shl 24)or (b shl 16) or (n shl 8) or asd);
      {$else}
      _put_pixel32(w^,i,j,c or (b shl 8) or (n shl 16) or (asd shl 24));
      {$endif}
@@ -615,15 +577,27 @@ Procedure UpdateScreen;
  end;
 
 Function GetPixel(x,y:integer):tColor;
+ var curPix:Uint32;
+     surf:pSDL_Surface;
  begin
-  {TODO: getting pixel from screen}
-  GetPixel.r:=0;
-  GetPixel.g:=0;
-  GetPixel.b:=0;
-  GetPixel.a:=0;
+  surf:=SDL_CreateRGBSurface(0,apw,aph,32,rmask,gmask,bmask,amask);
+  SDL_RenderReadPixels(render,nil,SDL_PIXELFORMAT_ABGR8888,surf^.pixels,surf^.pitch);
+  curPix:=_get_pixel32(surf,x,y);
+  {$ifdef ENDIAN_BIG}
+   GetPixel.r:=byte(curPix shr 24);
+   GetPixel.g:=byte(curPix shr 16);
+   GetPixel.b:=byte(curPix shr 8);
+   GetPixel.a:=byte(curPix);
+  {$else}
+   GetPixel.a:=byte(curPix shr 24);
+   GetPixel.b:=byte(curPix shr 16);
+   GetPixel.g:=byte(curPix shr 8);
+   GetPixel.r:=byte(curPix);
+  {$endif}
+  SDL_FreeSurface(surf);
  end;
 
-procedure setbuttoncolorRGBA(r,g,b,a:integer);
+procedure setButtonColorRGBA(r,g,b,a:integer);
  begin
   buttoncolor.r:=r;
   buttoncolor.g:=g;
