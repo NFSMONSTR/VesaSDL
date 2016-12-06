@@ -36,6 +36,11 @@ Interface
   M1920x1080f=$508;
   NormalPut=0;
   ShadowPut=1;
+
+  {Text styles, to combine is you can just OR they
+   Like Bold and Underline will be - 'TextBold OR TextUnderline'}
+   TextNormal=0; TextBold=1; TextItalic=2; TextUnderline=4; TextStrikeThrough=8;
+
  Type
   tColor=tSDL_Color;
   {tSDL_Color=record
@@ -100,9 +105,19 @@ Interface
   Function GetPixel(x,y:integer):tColor;
 
  {Drawing text}
-  Procedure LoadFont(name_:pansichar; ptsize:longint);{You must load font before draw text!!}
+
+  Procedure LoadFont(name_:pansichar; ptsize:longint; Style:word);{You must load font before draw text by OutTextXY!!}
   Procedure OutTextXY(x,y:integer; text:ansistring);
-  Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b:integer);
+  Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b,a:integer);
+
+  Function LoadFontToPtr(name_:pansichar; ptsize:longint; style:word):pointer;{Uses for load more than 1 font}
+  Procedure DestroyFont(font:pointer);{Every font, loaded by LoadFontToPtr, MUST be destroyed when programm ends}
+  Procedure OutTextXYWF(x,y:integer; text:ansistring; font:pointer);
+  Procedure OutTextXYWFColored(x,y:integer; text:ansistring; r,g,b,a:integer; font:pointer);
+
+
+  Procedure SetTextColor(q:integer);
+  Procedure SetTextColorRGBA(r,g,b,a:integer);
   Function TextWidth(s:ansistring):word;{Get Width of current text}
   Function TextHeight(s:ansistring):word;{Get Height of current text}
 
@@ -202,7 +217,8 @@ Implementation
          amask:longword=$ff000000;
        {$endif}
  var font:pointer;
-     color,buttoncolor,windowcolor,labelcolor,editcolor:tcolor; render:pointer;
+     color,TextColor,buttoncolor,windowcolor,labelcolor,editcolor:tcolor;
+     render:pointer;
      debug:boolean;
 procedure setcolorRGBA(r,g,b,a:integer);
  begin
@@ -216,6 +232,19 @@ procedure setcolorRGBA(r,g,b,a:integer);
 Procedure SetColor(q:integer);
  begin
   setcolorRGBA(pal[q].r,pal[q].g,pal[q].b,pal[q].a);
+ end;
+
+Procedure SetTextColorRGBA(r,g,b,a:integer);
+ begin
+  TextColor.R:=r;
+  TextColor.G:=g;
+  TextColor.B:=b;
+  TextColor.A:=a;
+ end;
+
+Procedure SetTextColor(q:integer);
+ begin
+  SetTextColorRGBA(pal[q].r,pal[q].g,pal[q].b,pal[q].a);
  end;
 
 Procedure ClearScreen;
@@ -288,15 +317,28 @@ Procedure OutError;
   halt(1);
  end;
 
-Procedure LoadFont(name_:pansichar; ptsize:longint);
+
+Function LoadFontToPtr(name_:pansichar; ptsize:longint; Style:word):pointer;
+ var font:pointer;
  begin
-  if Font<>nil then
-   TTF_CloseFont(font);
   font:=TTF_OpenFont(name_,ptsize);
   if (font<>nil) and (debug) then writeln('Font ',name_,' successfully loaded')
    else
     if font=nil then OutError;
-  TTF_SetFontStyle(font,TTF_style_bold);
+  TTF_SetFontStyle(font,Style);
+  LoadFontToPtr:=font;
+ end;
+
+Procedure DestroyFont(font:pointer);
+ begin
+  if font<>nil then
+   TTF_CloseFont(font);
+ end;
+
+Procedure LoadFont(name_:pansichar; ptsize:longint; Style:word);
+ begin
+  if font<>nil then TTF_CloseFont(font);
+  font:=LoadFontToPtr(name_,ptsize,Style);
  end;
 
 Procedure SetWSize(x1,y1,x2,y2:integer);
@@ -364,6 +406,7 @@ procedure InitWindow(full:boolean;name_:pchar);
    font:=nil;
    SetColorRGBA(0,0,0,255);
    SetWSize(0,0,apw,aph);
+   SetTextColor(15);
    ClearScreen;
    UpdateScreen;
    IMG_Init(IMG_INIT_JPG or IMG_INIT_PNG or IMG_INIT_TIF);
@@ -406,14 +449,14 @@ function TextHeight(s:ansistring):word;
   dispose(t1);
  end;
 
-procedure Render_Text(x,y:integer;text:ansistring; r,g,b:integer);
- var surf:pSDL_Surface; color:tSDL_Color; tex:pSDL_Texture; rect:tSDL_Rect;
+procedure Render_Text(x,y:integer;text:ansistring; color:tSDL_Color; font:pointer);
+ var surf:pSDL_Surface; tex:pSDL_Texture; rect:tSDL_Rect;
  begin
   if (text<>'') and (font<>nil) then
    begin
-    color.r:=r;
+{    color.r:=r;
     color.g:=g;
-    color.b:=b;
+    color.b:=b;}
     surf:=TTF_RenderUTF8_Solid(font,pchar(text),color);
     tex:=SDL_CreateTextureFromSurface(render,surf);
     rect.x:=x;
@@ -428,16 +471,29 @@ procedure Render_Text(x,y:integer;text:ansistring; r,g,b:integer);
    writeln('Font dont loaded');
  end;
 
-Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b:integer);
+Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b,a:integer);
+ var color:tSDL_color;
  begin
-  Render_Text(x,y,text,r,g,b);
+  color.r:=r;color.b:=b;color.g:=g;color.a:=a;
+  Render_Text(x,y,text,color,font);
  end;
 
 Procedure OutTextXY(x,y:integer; text:ansistring);
  begin
-  OutTextXYColored(x,y,text,255,255,255);
+  Render_Text(x,y,text,TextColor,font);
  end;
 
+Procedure OutTextXYWFColored(x,y:integer; text:ansistring; r,g,b,a:integer; font:pointer);
+ var color:tSDL_color;
+ begin
+  color.r:=r;color.b:=b;color.g:=g;color.a:=a;
+  Render_Text(x,y,text,color,font);
+ end;
+
+Procedure OutTextXYWF(x,y:integer; text:ansistring; font:pointer);
+ begin
+  Render_Text(x,y,text,TextColor,font);
+ end;
 
 Procedure DoneAll;
  begin
@@ -637,11 +693,11 @@ Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:bool
    ttf_sizeutf8(font,pchar(label_),@t,@t1);
    tx:=(x1+x2-t) div 2;
    ty:=(y1+y2-t1) div 2;
-   outtextxycolored(tx+1,ty+1,label_,120,120,120);
+   outtextxycolored(tx+1,ty+1,label_,120,120,120,255);
    if (focused) or (pressed) then
-    outtextxycolored(tx,ty,label_,229,196,14)
+    outtextxycolored(tx,ty,label_,229,196,14,255)
     else
-    outtextxycolored(tx,ty,label_,255,255,255);
+    outtextxycolored(tx,ty,label_,255,255,255,255);
   end;
 
 Procedure DrawPicButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean; p:pointer; sx,sy:integer);
@@ -721,7 +777,7 @@ Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
   ttf_sizeutf8(font,pansichar(text),t,t1);
   tx:=(x1+x2-t^) div 2;
   ty:=(y1+y2-t1^) div 2;
-  outtextxycolored(tx+1,ty+1,text,120,120,120);
+  outtextxycolored(tx+1,ty+1,text,120,120,120,255);
   outtextxy(tx,ty,text);
   dispose(t);dispose(t1);
  end;
