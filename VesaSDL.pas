@@ -58,6 +58,7 @@ Interface
   Procedure InitWindow(full:boolean;name_:pchar);{Create only window,to set size change apw and aph}
   Procedure InitAll(mode:word;Name_:Pchar);{Init sdl and window with selected mode and name}
   Procedure InitAllX(x,y:word;full:boolean;Name_:pchar);{Same but with custom settings}
+  Procedure ChangeWindowResolution(w,h:word);{Change window resolution; Better to ClearScreen or just redraw it}
   Procedure DoneAll;{Destroy window and done SDL2}
   Procedure Delay(n:word);{Sleep for n ms}
 
@@ -431,6 +432,12 @@ Procedure InitAllX(x,y:word;full:boolean;name_:pchar);
   InitWindow(full,Name_);
  end;
 
+Procedure ChangeWindowResolution(w,h:word);
+ begin
+  apw:=w;
+  aph:=h;
+  SDL_SetWindowSize(window,w,h);
+ end;
 function TextWidthWF(s:ansistring; font:pointer):word;
  var t,t1:plongint;
  begin
