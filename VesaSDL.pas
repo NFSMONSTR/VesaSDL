@@ -109,17 +109,19 @@ Interface
   Procedure LoadFont(name_:pansichar; ptsize:longint; Style:word);{You must load font before draw text by OutTextXY!!}
   Procedure OutTextXY(x,y:integer; text:ansistring);
   Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b,a:integer);
+  Function TextWidth(s:ansistring):word;{Get Width of current text}
+  Function TextHeight(s:ansistring):word;{Get Height of current text}
 
   Function LoadFontToPtr(name_:pansichar; ptsize:longint; style:word):pointer;{Uses for load more than 1 font}
   Procedure DestroyFont(font:pointer);{Every font, loaded by LoadFontToPtr, MUST be destroyed when programm ends}
   Procedure OutTextXYWF(x,y:integer; text:ansistring; font:pointer);
   Procedure OutTextXYWFColored(x,y:integer; text:ansistring; r,g,b,a:integer; font:pointer);
+  Function TextWidthWF(s:ansistring; font:pointer):word;{Get Width of current text with custom font}
+  Function TextHeightWF(s:ansistring; font:pointer):word;{Get Height of current text with custom font}
 
 
   Procedure SetTextColor(q:integer);
   Procedure SetTextColorRGBA(r,g,b,a:integer);
-  Function TextWidth(s:ansistring):word;{Get Width of current text}
-  Function TextHeight(s:ansistring):word;{Get Height of current text}
 
 
  {Images}
@@ -429,24 +431,34 @@ Procedure InitAllX(x,y:word;full:boolean;name_:pchar);
   InitWindow(full,Name_);
  end;
 
-function TextWidth(s:ansistring):word;
+function TextWidthWF(s:ansistring; font:pointer):word;
  var t,t1:plongint;
  begin
   new(t); new(t1);
   TTF_SizeUTF8(font,pansichar(s),t,t1);
-  TextWidth:=t^;
+  TextWidthWF:=t^;
   dispose(t);
   dispose(t1);
  end;
 
-function TextHeight(s:ansistring):word;
+function TextHeightWF(s:ansistring; font:pointer):word;
  var t,t1:plongint;
  begin
   new(t); new(t1);
   TTF_SizeUTF8(font,pansichar(s),t,t1);
-  TextHeight:=t1^;
+  TextHeightWF:=t1^;
   dispose(t);
   dispose(t1);
+ end;
+
+Function TextWidth(S:ansistring):word;
+ begin
+  textWidth:=textWidthWF(s,font);
+ end;
+
+Function TextHeight(s:ansistring):word;
+ begin
+  textHeight:=textHeightWF(s,font);
  end;
 
 procedure Render_Text(x,y:integer;text:ansistring; color:tSDL_Color; font:pointer);
