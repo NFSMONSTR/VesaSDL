@@ -59,6 +59,8 @@ Interface
   Procedure InitAll(mode:word;Name_:Pchar);{Init sdl and window with selected mode and name}
   Procedure InitAllX(x,y:word;full:boolean;Name_:pchar);{Same but with custom settings}
   Procedure ChangeWindowResolution(w,h:word);{Change window resolution; Better to ClearScreen or just redraw it}
+  Procedure SetWindowFullscreen(FullscreenType:integer);{0 - windowed, 1 - fake fullscreen(window to borderless with desktop size
+                                                        2 - real fullscreen(with videomode change)}
   Procedure DoneAll;{Destroy window and done SDL2}
   Procedure Delay(n:word);{Sleep for n ms}
 
@@ -438,6 +440,16 @@ Procedure ChangeWindowResolution(w,h:word);
   aph:=h;
   SDL_SetWindowSize(window,w,h);
  end;
+
+Procedure SetWindowFullscreen(FullscreenType:integer); 
+ begin
+  case fullscreenType of
+   0:SDL_SetWindowFullscreen(window,0);
+   1:SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN_DESKTOP);
+   2:SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN);
+  end;
+ end;
+
 function TextWidthWF(s:ansistring; font:pointer):word;
  var t,t1:plongint;
  begin
