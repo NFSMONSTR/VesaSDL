@@ -274,7 +274,7 @@ type tkey=record
      lastkey:tkey;
  Procedure InputInit;
  Procedure InputUpdate;
- Function ReadKey(var x:ansistring):integer;
+ Function ReadKey(var x:ansistring; var keymod:word):integer;
 Implementation
  Procedure InputUpdate;
   var p,p1:plongint; event:pSDL_Event;
@@ -329,11 +329,12 @@ Implementation
     end;
    dispose(event);
   end;
- Function readkey(var x:ansistring):integer;
+ Function readkey(var x:ansistring;var keymod:word):integer;
   begin
    if lastkey.key.sym<>-1 then
     begin
-     readkey:=lastkey.key.scancode+lastkey.mod_;
+     readkey:=lastkey.key.scancode;
+     keymod:=lastkey.mod_;
      x:=sdl_getkeyname(lastkey.key.sym);
      lastkey.key.sym:=-1;
     end
