@@ -69,6 +69,8 @@ Interface
   Procedure HideMouse;
   Procedure ShowMouse;
   Procedure ShowCursor(toggle:integer);{0 - hide, 1 - show}
+  Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
+  {Procedure SetStandartCursor;}
 
  {Drawing on screen}
   Procedure UpdateScreen;
@@ -208,6 +210,7 @@ const{This is palette for compatibility with old Vesa Module}
  (r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),
  (r:0; g:0; b:0; a:255));
  var apw,aph:integer;{Width and height of application windown} window:pointer;{Pointer to window}
+	 currentCursor:pSDL_CURSOR;	 
 Implementation
  const
        {$ifdef ENDIAN_BIG}
@@ -270,6 +273,7 @@ procedure PutPixel(x,y,c:integer);
  begin
   PutPixelRGBA(x,y,pal[c].r,pal[c].g,pal[c].b,pal[c].a);
  end;
+ 
 Procedure ShowCursor(toggle:integer);
  begin
   SDL_ShowCursor(toggle);
@@ -282,6 +286,30 @@ Procedure ShowMouse;
  begin
   ShowCursor(1);
  end;
+Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
+ var surf:pSDL_Surface;
+ begin
+  if currentCursor<>nil then
+   begin
+    SDL_FreeCursor(currentCursor);
+	currentCursor:=nil;
+   end;
+  surf:=IMG_Load(pchar(ansistring(pathToCursor)));
+  currentCursor:=SDL_CreateColorCursor(surf,hotx,hoty);
+  SDL_SetCursor(currentCursor);
+  SDL_FreeSurface(surf);
+ end;
+{Procedure SetStandartCursor; TODO; Wait header fix
+ var curs:pSDL_CURSOR;
+ begin
+  if currentCursor<>nil then 
+   begin
+    SDL_FreeCursor(currentCursor);
+	currentCursor:=nil;
+   end;
+  curs:=SDL_GetDefaultCursor;
+  SDL_SetCursor(curs);
+ end;}
 
 procedure Line(x1,y1,x2,y2:integer);
  begin
@@ -877,4 +905,5 @@ Procedure DrawEdit(x1,y1,x2,y2:integer;text:ansistring);
  end;
 begin
  Debug:=false;
+ currentCursor:=nil;
 end.
