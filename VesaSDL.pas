@@ -62,7 +62,7 @@ Interface
   Procedure SetWindowFullscreen(FullscreenType:integer);{0 - windowed, 1 - fake fullscreen(window to borderless with desktop size
                                                         2 - real fullscreen(with videomode change)}
   Procedure DoneAll;{Destroy window and done SDL2}
-  Procedure Delay(n:word);{Sleep for n ms}
+  Procedure Delay(n:longword);{Sleep for n ms}
 
 
  {Mouse}
@@ -536,7 +536,7 @@ Procedure DoneAll;
   SDL_Quit();
  end;
 
-Procedure Delay(n:word);
+Procedure Delay(n:longword);
  begin
   SDL_Delay(n);
  end;
