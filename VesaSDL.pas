@@ -70,7 +70,7 @@ Interface
   Procedure ShowMouse;
   Procedure ShowCursor(toggle:integer);{0 - hide, 1 - show}
   Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
-  {Procedure SetStandartCursor;}
+  Procedure SetStandartCursor;
 
  {Drawing on screen}
   Procedure UpdateScreen;
@@ -299,7 +299,7 @@ Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
   SDL_SetCursor(currentCursor);
   SDL_FreeSurface(surf);
  end;
-{Procedure SetStandartCursor; TODO; Wait header fix
+Procedure SetStandartCursor;
  var curs:pSDL_CURSOR;
  begin
   if currentCursor<>nil then 
@@ -309,7 +309,7 @@ Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
    end;
   curs:=SDL_GetDefaultCursor;
   SDL_SetCursor(curs);
- end;}
+ end;
 
 procedure Line(x1,y1,x2,y2:integer);
  begin
@@ -556,6 +556,8 @@ Procedure OutTextXYWF(x,y:integer; text:ansistring; font:pointer);
 
 Procedure DoneAll;
  begin
+  if currentCursor<>nil then 
+   SDL_FreeCursor(currentCursor);
   if font<>nil then
    TTF_CloseFont(font);
   TTF_Quit;
