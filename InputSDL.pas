@@ -78,7 +78,7 @@ Const
   kBackSlash=SDL_SCANCODE_BACKSLASH; { \ }
   kSemicolon=SDL_SCANCODE_SEMICOLON;  (*  ';'  *)
   kApostrophe=SDL_SCANCODE_APOSTROPHE; (*  ' ' '  *)
-  {SDL_SCANCODE_GRAVE = 53;}
+  kGrave=SDL_SCANCODE_GRAVE; { '`' }
   kComma=SDL_SCANCODE_COMMA; { ',' }
   kDot=SDL_SCANCODE_PERIOD; { '.' }
   kSlash=SDL_SCANCODE_SLASH; { / }
