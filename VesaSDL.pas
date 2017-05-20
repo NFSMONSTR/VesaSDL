@@ -55,9 +55,9 @@ Interface
  {System}
   Procedure ChangeDebug(b:boolean);{Default = false; Show debug messages}
   Procedure InitSDL;{Init SDL2 only}
-  Procedure InitWindow(full:boolean;name_:pchar);{Create only window,to set size change apw and aph}
-  Procedure InitAll(mode:word;Name_:Pchar);{Init sdl and window with selected mode and name}
-  Procedure InitAllX(x,y:word;full:boolean;Name_:pchar);{Same but with custom settings}
+  Procedure InitWindow(full:boolean;name_:ansistring);{Create only window,to set size change apw and aph}
+  Procedure InitAll(mode:word;Name_:ansistring);{Init sdl and window with selected mode and name}
+  Procedure InitAllX(x,y:word;full:boolean;Name_:ansistring);{Same but with custom settings}
   Procedure ChangeWindowResolution(w,h:word);{Change window resolution; Better to ClearScreen or just redraw it}
   Procedure SetWindowFullscreen(FullscreenType:integer);{0 - windowed, 1 - fake fullscreen(window to borderless with desktop size
                                                         2 - real fullscreen(with videomode change)}
@@ -69,7 +69,7 @@ Interface
   Procedure HideMouse;
   Procedure ShowMouse;
   Procedure ShowCursor(toggle:integer);{0 - hide, 1 - show}
-  Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
+  Procedure SetUserCursor(pathToCursor:ansistring; hotX,hotY:integer);
   Procedure SetStandartCursor;
 
  {Drawing on screen}
@@ -111,13 +111,13 @@ Interface
 
  {Drawing text}
 
-  Procedure LoadFont(name_:pansichar; ptsize:longint; Style:word);{You must load font before draw text by OutTextXY!!}
+  Procedure LoadFont(name_:ansistring; ptsize:longint; Style:word);{You must load font before draw text by OutTextXY!!}
   Procedure OutTextXY(x,y:integer; text:ansistring);
   Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b,a:integer);
   Function TextWidth(s:ansistring):word;{Get Width of current text}
   Function TextHeight(s:ansistring):word;{Get Height of current text}
 
-  Function LoadFontToPtr(name_:pansichar; ptsize:longint; style:word):pointer;{Uses for load more than 1 font}
+  Function LoadFontToPtr(name_:ansistring; ptsize:longint; style:word):pointer;{Uses for load more than 1 font}
   Procedure DestroyFont(font:pointer);{Every font, loaded by LoadFontToPtr, MUST be destroyed when programm ends}
   Procedure OutTextXYWF(x,y:integer; text:ansistring; font:pointer);
   Procedure OutTextXYWFColored(x,y:integer; text:ansistring; r,g,b,a:integer; font:pointer);
@@ -130,8 +130,8 @@ Interface
 
 
  {Images}
-  Function LoadImage(s:PAnsiChar):pointer;{Load new formats of images (JPG,PNG,TIF)}
-  Function LoadImage1(s:PAnsiChar):pointer;{For backward compatibility}
+  Function LoadImage(s:ansistring):pointer;{Load new formats of images (JPG,PNG,TIF)}
+  Function LoadImage1(s:ansistring):pointer;{For backward compatibility}
   Procedure PutImage1(x,y:integer; a:pointer);{Draw it}
   Procedure PutImage(x,y:integer;p:pimg;type_:byte);
   {Same. Type_=NormalPut - just draw image
@@ -287,7 +287,7 @@ Procedure ShowMouse;
  begin
   ShowCursor(1);
  end;
-Procedure SetUserCursor(pathToCursor:string; hotX,hotY:integer);
+Procedure SetUserCursor(pathToCursor:ansistring; hotX,hotY:integer);
  var surf:pSDL_Surface;
  begin
   if currentCursor<>nil then
@@ -352,10 +352,10 @@ Procedure OutError;
  end;
 
 
-Function LoadFontToPtr(name_:pansichar; ptsize:longint; Style:word):pointer;
+Function LoadFontToPtr(name_:ansistring; ptsize:longint; Style:word):pointer;
  var font:pointer;
  begin
-  font:=TTF_OpenFont(name_,ptsize);
+  font:=TTF_OpenFont(pchar(name_),ptsize);
   if (font<>nil) and (debug) then writeln('Font ',name_,' successfully loaded')
    else
     if font=nil then OutError;
@@ -369,10 +369,10 @@ Procedure DestroyFont(font:pointer);
    TTF_CloseFont(font);
  end;
 
-Procedure LoadFont(name_:pansichar; ptsize:longint; Style:word);
+Procedure LoadFont(name_:ansistring; ptsize:longint; Style:word);
  begin
   if font<>nil then TTF_CloseFont(font);
-  font:=LoadFontToPtr(name_,ptsize,Style);
+  font:=LoadFontToPtr(pchar(name_),ptsize,Style);
  end;
 
 Procedure SetWSize(x1,y1,x2,y2:integer);
@@ -419,10 +419,10 @@ Procedure InitSDL;
     else
     if debug then writeln('Successfully loaded SDL2');
  end;
-procedure InitWindow(full:boolean;name_:pchar); 
+procedure InitWindow(full:boolean;name_:ansistring); 
  begin
    InitSDL;
-   window:=SDL_CreateWindow(name_,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,apw,aph,(SDL_WINDOW_SHOWN) or (SDL_WINDOW_OPENGL));
+   window:=SDL_CreateWindow(pchar(name_),SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,apw,aph,(SDL_WINDOW_SHOWN) or (SDL_WINDOW_OPENGL));
    if full then
     SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN);
    if window=nil then
@@ -447,7 +447,7 @@ procedure InitWindow(full:boolean;name_:pchar);
    if debug then Writeln('Everything Done. Ready to work.')
 end;
 
-Procedure InitAll(mode:word; name_:pchar);
+Procedure InitAll(mode:word; name_:ansistring);
  var full:boolean;
  begin
   InitMode(mode);
@@ -455,7 +455,7 @@ Procedure InitAll(mode:word; name_:pchar);
    full:=true else full:=false;
   InitWindow(full,name_);
  end;
-Procedure InitAllX(x,y:word;full:boolean;name_:pchar);
+Procedure InitAllX(x,y:word;full:boolean;name_:ansistring);
  begin
   apw:=x;
   aph:=y;
@@ -570,7 +570,7 @@ Procedure Delay(n:longword);
  begin
   SDL_Delay(n);
  end;
-Function LoadImage(s:PAnsiChar):pointer;
+Function LoadImage(s:ansistring):pointer;
  var q:psdl_surface; w:psdl_texture; a:^img;
  begin
   q:=Img_Load(pchar(s));
@@ -583,7 +583,7 @@ Function LoadImage(s:PAnsiChar):pointer;
   LoadImage:=a;
  end;
  
-Function LoadImage1(s:PAnsiChar):pointer; 
+Function LoadImage1(s:ansistring):pointer; 
  begin
   LoadImage1:=LoadImage(s);
  end;
