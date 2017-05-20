@@ -130,7 +130,8 @@ Interface
 
 
  {Images}
-  Function LoadImage1(s:PAnsiChar):pointer;{Load new formats of images (JPG,PNG,TIF)}
+  Function LoadImage(s:PAnsiChar):pointer;{Load new formats of images (JPG,PNG,TIF)}
+  Function LoadImage1(s:PAnsiChar):pointer;{For backward compatibility}
   Procedure PutImage1(x,y:integer; a:pointer);{Draw it}
   Procedure PutImage(x,y:integer;p:pimg;type_:byte);
   {Same. Type_=NormalPut - just draw image
@@ -375,7 +376,7 @@ Procedure LoadFont(name_:pansichar; ptsize:longint; Style:word);
  end;
 
 Procedure SetWSize(x1,y1,x2,y2:integer);
- var tmp:pSDL_Rect; e:integer;
+ var tmp:pSDL_Rect;
  begin
   new(tmp);
   tmp^.x:=x1;
@@ -418,8 +419,7 @@ Procedure InitSDL;
     else
     if debug then writeln('Successfully loaded SDL2');
  end;
-procedure InitWindow(full:boolean;name_:pchar);
- var q:pointer;
+procedure InitWindow(full:boolean;name_:pchar); 
  begin
    InitSDL;
    window:=SDL_CreateWindow(name_,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,apw,aph,(SDL_WINDOW_SHOWN) or (SDL_WINDOW_OPENGL));
@@ -570,7 +570,7 @@ Procedure Delay(n:longword);
  begin
   SDL_Delay(n);
  end;
-Function LoadImage1(s:PAnsiChar):pointer;
+Function LoadImage(s:PAnsiChar):pointer;
  var q:psdl_surface; w:psdl_texture; a:^img;
  begin
   q:=Img_Load(pchar(s));
@@ -580,7 +580,12 @@ Function LoadImage1(s:PAnsiChar):pointer;
   a^.rect.h:=q^.h;
   a^.image:=w;
   SDL_freesurface(q);
-  LoadImage1:=a;
+  LoadImage:=a;
+ end;
+ 
+Function LoadImage1(s:PAnsiChar):pointer; 
+ begin
+  LoadImage1:=LoadImage(s);
  end;
 
 Procedure PutImage1(x,y:integer; a:pointer);
@@ -610,8 +615,8 @@ procedure _put_pixel32(surf:tsdl_surface;x,y:integer;pxl:uint32);
 Function Loadspr1(var f:file):pointer;
  type par=array of longword;
       par1=array of word;
- var i,j:word; a:^par; e:pointer; realsize:longint; q:byte; spritex,spritey:word;
- w:psdl_surface; s:psdl_texture; aa:^img; ww:string; asd:longword; qq:boolean;
+ var i,j:word; realsize:longint; q:byte; spritex,spritey:word;
+ w:psdl_surface; s:psdl_texture; aa:^img; asd:longword; qq:boolean;
  c,b,n:longword;
  begin
   BlockRead(f,spritex,2);
@@ -619,7 +624,6 @@ Function Loadspr1(var f:file):pointer;
   BlockRead(f,realsize,2);
   BlockRead(f,q,2);
   blockread(f,q,2);
-  new(a);
   w:=SDL_CreateRGBSurface(0,spritex,spritey,32,rmask,gmask,bmask,amask);
   if SDL_MustLock(w) then
    begin
@@ -869,7 +873,7 @@ Procedure ChangeDebug(b:boolean);
  end;
 
 Procedure DrawEdit(x1,y1,x2,y2:integer;text:ansistring);
- var text1:ansistring;x,y:integer;
+ var x,y:integer;
  begin
   setcolorRGBA(editcolor.r,editcolor.g,editcolor.b,editcolor.a);
   bar(x1,y1,x2,y2);
