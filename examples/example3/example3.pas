@@ -1,6 +1,6 @@
 { example3.pas - example of using VesaSDL
 
-Copyright (c) 2015-2016 NFS_MONSTR(Maxim Belyaev)
+Copyright (c) 2015-2017 NFS_MONSTR(Maxim Belyaev)
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -35,19 +35,19 @@ Begin
 
  x:=0; y:=0;{Left corner of screen}
 
- While keys[kEsc]=0 do
+ While not keys[kEsc] do
   begin
     ClearScreen;
     PutImage1(x,y,Image);{Draw picture}
     UpdateScreen;{Update image on screen}
     InputUpdate;{Update state of keyboard}
-    if (keys[kLeft]<>0) then{Move image by arrows}
+    if (keys[kLeft]) then{Move image by arrows}
      x:=x-10;
-    if (keys[kRight]<>0) then
+    if (keys[kRight]) then
      x:=x+10;
-    if (keys[kUp]<>0) then
+    if (keys[kUp]) then
      y:=y-10;
-    if (keys[kDown]<>0) then
+    if (keys[kDown]) then
      y:=y+10;
   end;
 
