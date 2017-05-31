@@ -22,13 +22,22 @@ Unit InputSDL;
 Interface
 Uses SDL2;
 Const
+  {Mouse}
+  NoButton=0;
+  LeftButton=1;
+  MidButton=2;
+  RightButton=3;
+  BothButtons=5;{For backward compatibility}
+  LeftAndMidButton=4;
+  LeftAndRightButton=5;
+  MidAndRightButton=6;
+  LeftAndMidAndRightButton=7;
   {left mouse button=1
    mid mouse button=2
    right mouse button=3
    l+m=4
    l+r=5
    m+r=6 l+m+r=7}
-  {here is long column of constants. If you want to see something else then go to line 269}
   kUnknown=SDL_SCANCODE_UNKNOWN;
   kA=SDL_SCANCODE_A;
   kB=SDL_SCANCODE_B;
