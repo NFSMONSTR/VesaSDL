@@ -279,7 +279,8 @@ type tkey=record
            key:tsdl_keysym;
            mod_:word;
           end;
- var keys:PUint8; mousex,mousey,mouseScrollHor,mouseScrollVert:Longint; mousebutton,countmousebuttonspressed:integer;
+     pBool=^boolean;
+ var keys:pBool; mousex,mousey,mouseScrollHor,mouseScrollVert:Longint; mousebutton,countmousebuttonspressed:integer;
      lastkey:tkey;
  Procedure InputInit;
  Procedure InputUpdate;
@@ -355,7 +356,7 @@ Implementation
   end;
  Procedure InputInit;
   begin
-   keys:=SDL_GetKeyboardState(nil);
+   keys:=pBool(SDL_GetKeyboardState(nil));
    lastkey.key.sym:=-1;
    SDL_PumpEvents;
    mousebutton:=0;
