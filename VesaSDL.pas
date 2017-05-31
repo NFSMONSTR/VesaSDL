@@ -35,7 +35,7 @@ Interface
   M1280x1024f=$503;
   M1920x1080f=$508;
   NormalPut=0;
-  ShadowPut=1;
+  ShadowPut=8;
 
   {Text styles, to combine is you can just OR they
    Like Bold and Underline will be - 'TextBold OR TextUnderline'}
