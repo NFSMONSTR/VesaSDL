@@ -76,6 +76,7 @@ Interface
   Procedure UpdateScreen;
   Procedure ClearScreen;
   Procedure SetWSize(x1,y1,x2,y2:integer);{Set output size(ViewPort)}
+  Procedure GetWSize(var x1,y1,x2,y2:integer);
 
 
  {Gui primitives}
@@ -384,6 +385,18 @@ Procedure SetWSize(x1,y1,x2,y2:integer);
   tmp^.w:=x2-x1;
   tmp^.h:=y2-y1;
   SDL_RenderSetViewPort(render,tmp);
+  dispose(tmp);
+ end;
+ 
+ Procedure GetWSize(var x1,y1,x2,y2:integer);
+ var tmp:pSDL_Rect;
+ begin
+  new(tmp);
+  SDL_RenderGetViewPort(render,tmp);
+  x1:=tmp^.x;
+  y1:=tmp^.y;
+  x2:=x1+tmp^.w;
+  y2:=y1+tmp^.h;
   dispose(tmp);
  end;
 
