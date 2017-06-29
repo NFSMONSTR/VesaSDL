@@ -23,16 +23,18 @@ Interface
  Uses SDL2,SDL2_image,SDL2_ttf,SDL2_gfx;
  Const
   {windowed modes}
-  M640x480=$100;
-  M800x600=$101;
-  M1024x768=$102;
-  M1280x1024=$103;
+  M640x400=$100;
+  M640x480=$101;
+  M800x600=$103;
+  M1024x768=$105;
+  M1280x1024=$107;
   M1920x1080=$108;
   {fullscreen modes;}
-  M640x480f=$500;
-  M800x600f=$501;
-  M1024x768f=$502;
-  M1280x1024f=$503;
+  M640x400f=$500;
+  M640x480f=$501;
+  M800x600f=$503;
+  M1024x768f=$505;
+  M1280x1024f=$507;
   M1920x1080f=$508;
   NormalPut=0;
   ShadowPut=8;
@@ -423,17 +425,21 @@ Procedure InitMode(mode:word);
   case mode of
     $100,$500:begin
                apw:=640;
-               aph:=480;
+               aph:=400;
               end;
     $101,$501:begin
+               apw:=640;
+               aph:=480;
+              end;
+    $103,$503:begin
                apw:=800;
                aph:=600;
               end;
-    $102,$502:begin
+    $105,$505:begin
                apw:=1024;
                aph:=768;
               end;
-    $103,$503:begin
+    $107,$507:begin
                apw:=1280;
                aph:=1024;
               end;
