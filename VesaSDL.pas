@@ -103,6 +103,7 @@ Interface
   Procedure PutPixel(x,y,c:integer);
   Procedure Line(x1,y1,x2,y2:integer);
   Procedure Rectangle(x1,y1,x2,y2:integer);
+  Procedure Rectangle(x1,y1,x2,y2:integer;Color1,Color2:byte);
   Procedure Bar(x1,y1,x2,y2:integer);
   Procedure Ellipse(x,y,rx,ry:integer);
   Procedure FillEllipse(x,y,rx,ry:integer);
@@ -142,6 +143,10 @@ Interface
 
   Function LoadSpr(s:string):pointer;{Loading old sprites from vesa module}
   Function LoadSpr1(var f:file):pointer;{Same but load from file variable}
+
+  {Backward compatibility}
+  Procedure SetVisualPage(Page:word);
+  Procedure SetActivePage(Page:word);
 
 const{This is palette for compatibility with old Vesa Module}
      {It may be change in future versions}
@@ -321,6 +326,19 @@ procedure Line(x1,y1,x2,y2:integer);
 Procedure Rectangle(x1,y1,x2,y2:integer);
  begin
   rectangleRGBA(render,x1,y1,x2,y2,color.r,color.g,color.b,color.a);
+ end;
+
+Procedure Rectangle(x1,y1,x2,y2:integer; Color1, Color2:byte);
+ var oldColor:tSDL_Color;
+ begin
+  oldColor:=color;
+  setcolor(color2);
+  Line(x1,y2,x2,y2);
+  Line(x2,y1,x2,y2);
+  setcolor(color1);
+  Line(x1,y1,x2,y2);
+  Line(x1,y1,x1,y2);
+  setcolorRGBA(oldColor.r,oldColor.g,oldcolor.b,oldColor.a);
  end;
 
 Procedure Bar(x1,y1,x2,y2:integer);
@@ -921,6 +939,14 @@ Procedure DrawEdit(x1,y1,x2,y2:integer;text:ansistring);
    end
    else
     if text<>'' then outtextxy(x,y,text);
+ end;
+
+Procedure SetVisualPage(Page:word);
+ begin
+  UpdateScreen;
+ end;
+Procedure SetActivePage(Page:word);
+ begin
  end;
 begin
  Debug:=false;
