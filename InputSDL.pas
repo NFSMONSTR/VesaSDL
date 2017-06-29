@@ -283,6 +283,8 @@ type tkey=record
  var keys:pBool; mousex,mousey,mouseScrollHor,mouseScrollVert:Longint; mousebutton,countmousebuttonspressed:integer;
      lastkey:tkey;
  Procedure InputInit;
+ Procedure KeyboardInit;
+ Procedure KeyboardDone;
  Procedure InputUpdate;
  Function ReadKey(var x:ansistring; var keymod:word):integer;
 Implementation
@@ -364,6 +366,13 @@ Implementation
    mouseScrollVert:=0;
    countmousebuttonspressed:=0;
    inputupdate;
+  end;
+ Procedure KeyboardInit;{For backward compatibility}
+  begin
+   InputInit;
+  end;
+ Procedure KeyboardDone;{For backward compatibility}
+  begin
   end;
 begin
 end.

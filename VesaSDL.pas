@@ -56,7 +56,7 @@ Interface
   Procedure ChangeDebug(b:boolean);{Default = false; Show debug messages}
   Procedure InitSDL;{Init SDL2 only}
   Procedure InitWindow(full:boolean;name_:ansistring);{Create only window,to set size change apw and aph}
-  Procedure InitAll(mode:word;Name_:ansistring);{Init sdl and window with selected mode and name}
+  Procedure InitAll(mode:word);{Init sdl and window with selected mode}
   Procedure InitAllX(x,y:word;full:boolean;Name_:ansistring);{Same but with custom settings}
   Procedure ChangeWindowResolution(w,h:word);{Change window resolution; Better to ClearScreen or just redraw it}
   Procedure SetWindowFullscreen(FullscreenType:integer);{0 - windowed, 1 - fake fullscreen(window to borderless with desktop size
@@ -460,13 +460,13 @@ procedure InitWindow(full:boolean;name_:ansistring);
    if debug then Writeln('Everything Done. Ready to work.')
 end;
 
-Procedure InitAll(mode:word; name_:ansistring);
+Procedure InitAll(mode:word);
  var full:boolean;
  begin
   InitMode(mode);
   if mode>=$500 then
    full:=true else full:=false;
-  InitWindow(full,name_);
+  InitWindow(full,'VesaSDL app');
  end;
 Procedure InitAllX(x,y:word;full:boolean;name_:ansistring);
  begin
