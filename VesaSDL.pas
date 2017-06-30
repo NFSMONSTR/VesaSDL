@@ -91,6 +91,11 @@ Interface
   Procedure SetWindowColor(q:integer);
   Procedure SetLabelColorRGBA(r,g,b,a:integer);
   Procedure SetLabelColor(q:integer);
+  Procedure SetWindowTexture(Path:ansistring);
+  Procedure SetButtonTexture(Path:ansistring);
+  Procedure SetLabelTexture(Path:ansistring);
+  Procedure SetEditTexture(Path:ansistring);
+  Procedure DrawTexture(x1,y1,x2,y2:integer; tex:pImg);
   Procedure DrawEdit(x1,y1,x2,y2:integer; text:ansistring);
   Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean);
   Procedure DrawPicButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean; p:pointer; sx,sy:integer);
@@ -220,7 +225,7 @@ const{This is palette for compatibility with old Vesa Module}
  (r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),
  (r:0; g:0; b:0; a:255));
  var apw,aph:integer;{Width and height of application windown} window:pointer;{Pointer to window}
-	 currentCursor:pSDL_CURSOR;	 
+     currentCursor:pSDL_CURSOR;
 Implementation
  const
        {$ifdef ENDIAN_BIG}
@@ -237,6 +242,8 @@ Implementation
  var font:pointer;
      color,TextColor,buttoncolor,windowcolor,labelcolor,editcolor:tcolor;
      render:pointer;
+     buttonTexture,windowTexture,labelTexture,editTexture:pointer;
+     buttonTextureName,windowTextureName,labelTextureName,editTextureName:ansistring;
      debug:boolean;
 procedure setcolorRGBA(r,g,b,a:integer);
  begin
@@ -475,6 +482,14 @@ procedure InitWindow(full:boolean;name_:ansistring);
    SDL_SetRenderDrawBlendMode( Render, SDL_BLENDMODE_blend );
    TTF_INIT;
    font:=nil;
+   buttonTexture:=nil;
+   windowTexture:=nil;
+   labelTexture:=nil;
+   editTexture:=nil;
+   buttonTextureName:='';
+   windowTextureName:='';
+   labelTextureName:='';
+   editTextureName:='';
    SetColorRGBA(0,0,0,255);
    SetWSize(0,0,apw,aph);
    SetTextColor(15);
@@ -602,6 +617,14 @@ Procedure DoneAll;
  begin
   if currentCursor<>nil then 
    SDL_FreeCursor(currentCursor);
+  if  buttonTexture<>nil then
+   SDL_DestroyTexture(buttonTexture);
+  if  windowTexture<>nil then
+   SDL_DestroyTexture(windowTexture);
+  if  labelTexture<>nil then
+   SDL_DestroyTexture(labelTexture);
+  if  editTexture<>nil then
+   SDL_DestroyTexture(editTexture);
   if font<>nil then
    TTF_CloseFont(font);
   TTF_Quit;
@@ -618,7 +641,17 @@ Function LoadImage(s:ansistring):pointer;
  var q:psdl_surface; w:psdl_texture; a:^img;
  begin
   q:=Img_Load(pchar(s));
+  if (q=nil) then
+   begin
+    writeln(Img_GetError);
+    halt(1);
+   end;
   w:=SDL_CreateTextureFromSurface(render,q);
+  if (w=nil) then
+   begin
+    writeln(SDL_getError);
+    halt(1);
+   end;
   new(a);
   a^.rect.w:=q^.w;
   a^.rect.h:=q^.h;
@@ -778,11 +811,32 @@ procedure seteditcolorRGBA(r,g,b,a:integer);
   editcolor.a:=a;
  end;
 
+Procedure DrawTexture(x1,y1,x2,y2:integer; tex:pImg);
+ var srcrect,dstrect:tSDL_rect;
+ begin
+  dstrect.x:=x1;
+  dstrect.y:=y1;
+  dstrect.w:=x2-x1;
+  dstrect.h:=y2-y1;
+  srcrect:=dstrect;
+  srcrect.x:=0;
+  srcrect.y:=0;
+  if SDL_RenderCopy(render,tex^.image,@srcrect,@dstrect)<>0 then
+   begin
+    writeln(SDL_GetError);
+    halt(1);
+   end;
+ end;
+
 Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean);
-  var tx,ty:integer; t,t1:longint;
+  var tx,ty:integer; t,t1:longint; oldColor:tSDL_Color;
   begin
+   oldColor:=color;
    setcolorRGBA(buttoncolor.r,buttoncolor.g,buttoncolor.b,buttoncolor.a);
-   bar(x1,y1,x2,y2);
+   if buttonTexture=nil then
+    bar(x1,y1,x2,y2)
+    else
+    DrawTexture(x1,y1,x2,y2,buttonTexture);
    setcolorRGBA(20,20,20,64);
    if pressed then
     bar(x1,y1,x2,y2)
@@ -807,6 +861,7 @@ Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:bool
     outtextxycolored(tx,ty,label_,229,196,14,255)
     else
     outtextxycolored(tx,ty,label_,255,255,255,255);
+   setColorRgba(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
   end;
 
 Procedure DrawPicButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean; p:pointer; sx,sy:integer);
@@ -822,20 +877,29 @@ Procedure setwindowcolorRGBA(r,g,b,a:integer);
   windowcolor.b:=b;
   windowcolor.a:=a;
  end;
+
 Procedure Ramka(x1,y1,x2,y2:integer);
+ var oldColor:tSDL_color; 
  begin
+  oldColor:=color;
   setcolorRGBA(windowcolor.r,windowcolor.g,windowcolor.b,windowcolor.a);
-  bar(x1,y1,x2,y2);
+  if windowTexture=nil then
+    bar(x1,y1,x2,y2)
+   else
+    DrawTexture(x1,y1,x2,y2,windowTexture);
   setcolorRGBA(255,255,255,100);
   line(x1,y1,x1,y2);
   line(x1,y1,x2,y1);
   setcolorRGBA(0,0,0,80);
   line(x1,y2,x2,y2);
   line(x2,y1,x2,y2);
+  setColorRgba(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
  end;
 
 Procedure drawwindow(x1,y1,x2,y2:integer);
+ var oldColor:tSDL_color;
  begin
+  oldColor:=color;
   ramka(x1,y1,x2,y2);
   x1:=x1+10;
   x2:=x2-10;
@@ -856,6 +920,7 @@ Procedure drawwindow(x1,y1,x2,y2:integer);
   line(x2-2,y1,x2-2,y2);
   line(x1,y2-1,x2-1,y2-1);
   line(x1,y2-2,x2-1,y2-2);
+  setColorRgba(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
  end;
 
 Procedure setlabelcolorRGBA(r,g,b,a:integer);
@@ -866,11 +931,48 @@ Procedure setlabelcolorRGBA(r,g,b,a:integer);
   labelcolor.a:=a;
  end;
 
-Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
- var t,t1:plongint;  tx,ty:integer;
+Procedure setTex(var dstTexture:pointer; var dstPath:ansistring; path:ansistring);
+ var img:pointer;
  begin
+  if dstTexture<>nil then
+   begin
+    SDL_DestroyTexture(dstTexture);
+    dstTexture:=nil;
+   end;
+  if (lowercase(copy(path,length(path)-2,3))='spr') or (lowercase(copy(path,length(path)-2,3))='tex')then
+    img:=LoadSpr(path)
+   else
+    img:=loadImage(path);
+  dstTexture:=img;
+  dstPath:=path;
+ end;
+
+Procedure SetWindowTexture(Path:ansistring);
+ begin
+  setTex(windowTexture,windowTextureName,path);
+ end;
+Procedure SetButtonTexture(Path:ansistring);
+ begin
+  setTex(buttonTexture,buttonTextureName,path);
+ end;
+Procedure SetLabelTexture(Path:ansistring);
+ begin
+  setTex(labelTexture,labelTextureName,path);
+ end;
+Procedure SetEditTexture(Path:ansistring);
+ begin
+  setTex(editTexture,editTextureName,path);
+ end;
+
+Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
+ var t,t1:plongint;  tx,ty:integer; oldColor:tSDL_COLOR;
+ begin
+  oldColor:=color;
   setcolorRGBA(labelcolor.r,labelcolor.g,labelcolor.b,labelcolor.a);
-  bar(x1,y1,x2,y2);
+  if labelTexture=nil then
+    bar(x1,y1,x2,y2)
+   else
+    DrawTexture(x1,y1,x2,y2,labelTexture);
   setcolorRGBA(255,255,255,70);
   line(x1,y1,x2-1,y1);
   line(x1,y1+1,x2-1,y1+1);
@@ -889,6 +991,7 @@ Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
   outtextxycolored(tx+1,ty+1,text,120,120,120,255);
   outtextxy(tx,ty,text);
   dispose(t);dispose(t1);
+  setColorRgba(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
  end;
 
 Procedure SetEditColor(q:integer);
@@ -917,10 +1020,14 @@ Procedure ChangeDebug(b:boolean);
  end;
 
 Procedure DrawEdit(x1,y1,x2,y2:integer;text:ansistring);
- var x,y:integer;
+ var x,y:integer; oldcolor:tSDL_Color;
  begin
+  oldColor:=color;
   setcolorRGBA(editcolor.r,editcolor.g,editcolor.b,editcolor.a);
-  bar(x1,y1,x2,y2);
+  if editTexture=nil then
+    bar(x1,y1,x2,y2)
+   else
+    DrawTexture(x1,y1,x2,y2,editTexture);
   setcolorRGBA(0,0,0,120);
   line(x1,y1,x2,y1);
   line(x1,y1,x1,y2);
@@ -952,6 +1059,7 @@ Procedure DrawEdit(x1,y1,x2,y2:integer;text:ansistring);
    end
    else
     if text<>'' then outtextxy(x,y,text);
+  setcolorRGBA(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
  end;
 
 Procedure SetVisualPage(Page:word);
