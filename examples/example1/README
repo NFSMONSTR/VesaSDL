@@ -1,0 +1,9 @@
+
+======================================================================================
+=                                                                                    =
+=                                  Example 1                                         =
+=                                                                                    =
+======================================================================================
+
+This example shows how to create and destroy window, update screen, use some basic
+graphical primitives and delay
