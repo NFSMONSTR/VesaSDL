@@ -83,6 +83,7 @@ Interface
 
 
  {Gui primitives}
+
   Procedure SetButtonColorRGBA(r,g,b,a:integer);
   Procedure SetButtonColor(q:integer);
   Procedure SetEditColorRGBA(r,g,b,a:integer);
@@ -91,16 +92,24 @@ Interface
   Procedure SetWindowColor(q:integer);
   Procedure SetLabelColorRGBA(r,g,b,a:integer);
   Procedure SetLabelColor(q:integer);
+
   Procedure SetWindowTexture(Path:ansistring);
   Procedure SetButtonTexture(Path:ansistring);
   Procedure SetLabelTexture(Path:ansistring);
   Procedure SetEditTexture(Path:ansistring);
+
+  Function GetButtonTexture:ansistring;
+  Function GetWindowTexture:ansistring;
+  Function GetLabelTexture:ansistring;
+  Function GetEditTexture:ansistring;
+
   Procedure DrawTexture(x1,y1,x2,y2:integer; tex:pImg);
   Procedure DrawEdit(x1,y1,x2,y2:integer; text:ansistring);
   Procedure DrawButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean);
   Procedure DrawPicButton(x1,y1,x2,y2:integer; label_:ansistring;pressed,focused:boolean; p:pointer; sx,sy:integer);
   Procedure DrawWindow(x1,y1,x2,y2:integer);
   Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
+  Procedure DrawScreen(x1,y1,x2,y2:integer; name:ansistring);
   Procedure Ramka(x1,y1,x2,y2:integer);
 
 
@@ -135,7 +144,7 @@ Interface
   Function TextHeightWF(s:ansistring; font:pointer):word;{Get Height of current text with custom font}
 
 
-  Procedure SetTextColor(q:integer);
+  Procedure SetTextColor(q:integer);{Only for outTextXYWF}
   Procedure SetTextColorRGBA(r,g,b,a:integer);
 
 
@@ -598,7 +607,7 @@ Procedure OutTextXYColored(x,y:integer; text:ansistring; r,g,b,a:integer);
 
 Procedure OutTextXY(x,y:integer; text:ansistring);
  begin
-  Render_Text(x,y,text,TextColor,font);
+  Render_Text(x,y,text,Color,font);
  end;
 
 Procedure OutTextXYWFColored(x,y:integer; text:ansistring; r,g,b,a:integer; font:pointer);
@@ -618,13 +627,25 @@ Procedure DoneAll;
   if currentCursor<>nil then 
    SDL_FreeCursor(currentCursor);
   if  buttonTexture<>nil then
-   SDL_DestroyTexture(buttonTexture);
+   begin
+    SDL_DestroyTexture(pImg(buttonTexture)^.image);
+    dispose(pImg(buttonTexture));
+   end;
   if  windowTexture<>nil then
-   SDL_DestroyTexture(windowTexture);
+   begin
+    SDL_DestroyTexture(pImg(windowTexture)^.image);
+    dispose(pImg(windowTexture));
+   end;
   if  labelTexture<>nil then
-   SDL_DestroyTexture(labelTexture);
+   begin
+    SDL_DestroyTexture(pImg(labelTexture)^.image);
+    dispose(pImg(labelTexture));
+   end;
   if  editTexture<>nil then
-   SDL_DestroyTexture(editTexture);
+   begin
+    SDL_DestroyTexture(pImg(editTexture)^.image);
+    dispose(pImg(editTexture));
+   end;
   if font<>nil then
    TTF_CloseFont(font);
   TTF_Quit;
@@ -936,7 +957,8 @@ Procedure setTex(var dstTexture:pointer; var dstPath:ansistring; path:ansistring
  begin
   if dstTexture<>nil then
    begin
-    SDL_DestroyTexture(dstTexture);
+    SDL_DestroyTexture(pImg(dstTexture)^.image);
+    dispose(pImg(dstTexture));
     dstTexture:=nil;
    end;
   if (lowercase(copy(path,length(path)-2,3))='spr') or (lowercase(copy(path,length(path)-2,3))='tex')then
@@ -962,6 +984,26 @@ Procedure SetLabelTexture(Path:ansistring);
 Procedure SetEditTexture(Path:ansistring);
  begin
   setTex(editTexture,editTextureName,path);
+ end;
+
+Function GetButtonTexture:ansistring;
+ begin
+  GetButtonTexture:=buttonTextureName;
+ end;
+
+Function GetWindowTexture:ansistring;
+ begin
+  GetWindowTexture:=windowTextureName;
+ end;
+
+Function GetLabelTexture:ansistring;
+ begin
+  GetLabelTexture:=labelTextureName;
+ end;
+
+Function GetEditTexture:ansistring;
+ begin
+  GetEditTexture:=editTextureName;
  end;
 
 Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
@@ -992,6 +1034,18 @@ Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
   outtextxy(tx,ty,text);
   dispose(t);dispose(t1);
   setColorRgba(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
+ end;
+
+Procedure DrawScreen(x1,y1,x2,y2:integer; name:ansistring);
+ var img:pImg;
+ begin
+  if (lowercase(copy(name,length(name)-2,3))='spr') or (lowercase(copy(name,length(name)-2,3))='tex')then
+    img:=LoadSpr(name)
+   else
+    img:=loadImage(name);
+  DrawTexture(x1,y1,x2,y2,img);
+  SDL_DestroyTexture(img^.image);
+  dispose(img);
  end;
 
 Procedure SetEditColor(q:integer);
