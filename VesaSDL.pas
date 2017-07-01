@@ -149,10 +149,12 @@ Interface
 
 
  {Images}
+  Procedure DestroyImage(var img:pointer);
   Function LoadImage(s:ansistring):pointer;{Load new formats of images (JPG,PNG,TIF)}
   Function LoadImage1(s:ansistring):pointer;{For backward compatibility}
   Procedure PutImage1(x,y:integer; a:pointer);{Draw it}
   Procedure PutImage(x,y:integer;p:pimg;type_:byte);
+  Procedure PictureFromFile(x,y:integer; Filename:ansistring);
   {Same. Type_=NormalPut - just draw image
          Type_=ShadowPut - draw shadow of image}
 
@@ -658,6 +660,17 @@ Procedure Delay(n:longword);
  begin
   SDL_Delay(n);
  end;
+
+Procedure DestroyImage(var img:pointer);
+ begin
+  if img<>nil then
+   begin
+    SDL_DestroyTexture(pImg(img)^.image);
+    dispose(pImg(img));
+    img:=nil;
+   end;
+ end;
+
 Function LoadImage(s:ansistring):pointer;
  var q:psdl_surface; w:psdl_texture; a:^img;
  begin
@@ -783,6 +796,17 @@ Procedure PutImage(x,y:integer;p:pimg;type_:byte);
     SDL_SetTextureAlphaMod(p^.image,255);
     SDL_SetTextureColorMod(p^.image,255,255,255);
    end;
+ end;
+
+Procedure PictureFromFile(x,y:integer; FileName:ansistring);
+ var Img:pointer;
+ begin
+  if (lowercase(copy(filename,length(filename)-2,3))='spr') or (lowercase(copy(filename,length(filename)-2,3))='tex')then
+    img:=LoadSpr(filename)
+   else
+    img:=loadImage(filename);
+  PutSprite(x,y,img);
+  DestroyImage(img);
  end;
 
 Procedure PutSprite(x,y:integer; p:pointer);
