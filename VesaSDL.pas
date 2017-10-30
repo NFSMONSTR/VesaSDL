@@ -504,6 +504,7 @@ procedure InitWindow(full:boolean;name_:ansistring);
    SetColorRGBA(0,0,0,255);
    SetWSize(0,0,apw,aph);
    SetTextColor(15);
+   SetColor(15);
    ClearScreen;
    UpdateScreen;
    IMG_Init(IMG_INIT_JPG or IMG_INIT_PNG or IMG_INIT_TIF);
