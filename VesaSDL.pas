@@ -36,8 +36,13 @@ Interface
   M1024x768f=$505;
   M1280x1024f=$507;
   M1920x1080f=$508;
+
   NormalPut=0;
   ShadowPut=8;
+
+  Flip_None = SDL_FLIP_NONE;
+  Flip_Hor  = SDL_FLIP_HORIZONTAL;
+  Flip_Vert = SDL_FLIP_VERTICAL;
 
   {Text styles, to combine is you can just OR they
    Like Bold and Underline will be - 'TextBold OR TextUnderline'}
@@ -152,11 +157,17 @@ Interface
   Procedure DestroyImage(var img:pointer);
   Function LoadImage(s:ansistring):pointer;{Load new formats of images (JPG,PNG,TIF)}
   Function LoadImage1(s:ansistring):pointer;{For backward compatibility}
+
+  {PutImage}
   Procedure PutImage1(x,y:integer; a:pointer);{Draw it}
   Procedure PutImage(x,y:integer;p:pimg;type_:byte);
-  Procedure PictureFromFile(x,y:integer; Filename:ansistring);
-  {Same. Type_=NormalPut - just draw image
+  {      Type_=NormalPut - just draw image
          Type_=ShadowPut - draw shadow of image}
+  Procedure PutImage(x,y:integer; p:pimg);
+  Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, centerY:integer);
+  Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, centerY, flip:integer);
+
+  Procedure PictureFromFile(x,y:integer; Filename:ansistring);
 
   Procedure PutSprite(x,y:integer; p:pointer);{For backward compatibility}
 
@@ -701,13 +712,15 @@ Function LoadImage1(s:ansistring):pointer;
  end;
 
 Procedure PutImage1(x,y:integer; a:pointer);
- var p:^img;
+ var p:^img; curCol:tColor;
  begin
+  curCol:=color;
   SetColorRGBA(255,255,255,255);
   p:=a;
   p^.rect.x:=x;
   p^.rect.y:=y;
   SDL_RenderCopy(render,p^.image,nil,@p^.rect);
+  SetColorRGBA(curCol.r,curCol.g,curCol.b,curCol.a);
  end;
 
 function _get_pixel32(surf:psdl_surface;x,y:integer):uint32;
@@ -792,6 +805,52 @@ Procedure PutImage(x,y:integer;p:pimg;type_:byte);
     SDL_SetTextureColorMod(p^.image,0,0,0);
    end;
   PutImage1(x,y,p);
+  if type_=shadowput then
+   begin
+    SDL_SetTextureAlphaMod(p^.image,255);
+    SDL_SetTextureColorMod(p^.image,255,255,255);
+   end;
+ end;
+
+
+Procedure PutImage(x,y:integer; p:pimg);
+ begin
+  PutImage(x,y,p,NormalPut);
+ end;
+
+Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, centerY, flip:integer);
+ var curCol:tColor; point:tSDL_Point;
+ begin
+  if type_=shadowput then
+   begin
+    SDL_SetTextureAlphaMod(p^.image,192);
+    SDL_SetTextureColorMod(p^.image,0,0,0);
+   end;
+
+  curCol:=color;
+  SetColorRGBA(255,255,255,255);
+  p^.rect.x:=x;
+  p^.rect.y:=y;
+  point.x:=centerx;
+  point.y:=centery;
+  SDL_RenderCopyEx(render,p^.image,nil,@p^.rect,angle,@point,flip);
+  SetColorRGBA(curCol.r,curCol.g,curCol.b,curCol.a);
+
+  if type_=shadowput then
+   begin
+    SDL_SetTextureAlphaMod(p^.image,255);
+    SDL_SetTextureColorMod(p^.image,255,255,255);
+   end;
+ end;
+
+Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, centerY:integer);
+ begin
+  if type_=shadowput then
+   begin
+    SDL_SetTextureAlphaMod(p^.image,192);
+    SDL_SetTextureColorMod(p^.image,0,0,0);
+   end;
+  PutImage(x,y,p,type_,angle,centerx,centery,FLIP_NONE);
   if type_=shadowput then
    begin
     SDL_SetTextureAlphaMod(p^.image,255);
