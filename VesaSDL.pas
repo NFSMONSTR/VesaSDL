@@ -40,6 +40,10 @@ Interface
   NormalPut=0;
   ShadowPut=8;
 
+  LightShadow=192;
+  MediumShadow=128;
+  DarkShadow=100;
+
   Flip_None = SDL_FLIP_NONE;
   Flip_Hor  = SDL_FLIP_HORIZONTAL;
   Flip_Vert = SDL_FLIP_VERTICAL;
@@ -166,6 +170,7 @@ Interface
   Procedure PutImage(x,y:integer; p:pimg);
   Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, centerY:integer);
   Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, centerY, flip:integer);
+  Procedure SetShadowMode(SM:byte);
 
   Procedure PictureFromFile(x,y:integer; Filename:ansistring);
 
@@ -267,6 +272,7 @@ Implementation
      buttonTexture,windowTexture,labelTexture,editTexture:pointer;
      buttonTextureName,windowTextureName,labelTextureName,editTextureName:ansistring;
      debug:boolean;
+     shadowMode:byte;
 procedure setcolorRGBA(r,g,b,a:integer);
  begin
   color.r:=r;
@@ -802,7 +808,7 @@ Procedure PutImage(x,y:integer;p:pimg;type_:byte);
   if type_=shadowput then
    begin
     SDL_SetTextureAlphaMod(p^.image,192);
-    SDL_SetTextureColorMod(p^.image,0,0,0);
+    SDL_SetTextureColorMod(p^.image,shadowMode,shadowMode,shadowMode);
    end;
   PutImage1(x,y,p);
   if type_=shadowput then
@@ -824,7 +830,7 @@ Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, cente
   if type_=shadowput then
    begin
     SDL_SetTextureAlphaMod(p^.image,192);
-    SDL_SetTextureColorMod(p^.image,0,0,0);
+    SDL_SetTextureColorMod(p^.image,shadowMode,shadowMode,shadowMode);
    end;
 
   curCol:=color;
@@ -848,7 +854,7 @@ Procedure PutImage(x,y:integer; p:pimg; type_:byte; angle:double; centerX, cente
   if type_=shadowput then
    begin
     SDL_SetTextureAlphaMod(p^.image,192);
-    SDL_SetTextureColorMod(p^.image,0,0,0);
+    SDL_SetTextureColorMod(p^.image,shadowMode,shadowMode,shadowMode);
    end;
   PutImage(x,y,p,type_,angle,centerx,centery,FLIP_NONE);
   if type_=shadowput then
@@ -898,6 +904,11 @@ Function GetPixel(x,y:integer):tColor;
    GetPixel.r:=byte(curPix);
   {$endif}
   SDL_FreeSurface(surf);
+ end;
+
+Procedure SetShadowMode(SM:byte);
+ begin
+  shadowMode:=sm;
  end;
 
 procedure setButtonColorRGBA(r,g,b,a:integer);
@@ -1210,4 +1221,5 @@ Procedure SetActivePage(Page:word);
 begin
  Debug:=false;
  currentCursor:=nil;
+ shadowMode:=mediumShadow;
 end.
