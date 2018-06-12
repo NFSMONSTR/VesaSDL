@@ -1,6 +1,6 @@
 { InputSDL.pas - Input subsystem of VesaSDL
 
-Copyright (c) 2015-2017 NFS_MONSTR(Maxim Belyaev)
+Copyright (c) 2015-2018 NFS_MONSTR(Maxim Belyaev)
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
