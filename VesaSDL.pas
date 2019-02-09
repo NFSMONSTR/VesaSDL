@@ -566,24 +566,18 @@ Procedure SetWindowFullscreen(FullscreenType:integer);
  end;
 
 function TextWidthWF(s:ansistring; font:pointer):word;
- var t,t1:plongint;
- begin
-  new(t); new(t1);
-  TTF_SizeUTF8(font,pansichar(s),t,t1);
-  TextWidthWF:=t^;
-  dispose(t);
-  dispose(t1);
- end;
+var t , t1 : longint;
+begin
+  TTF_SizeUTF8(font, pansichar(s), addr(t), addr(t1));
+  TextWidthWF := t;
+end;
 
 function TextHeightWF(s:ansistring; font:pointer):word;
- var t,t1:plongint;
- begin
-  new(t); new(t1);
-  TTF_SizeUTF8(font,pansichar(s),t,t1);
-  TextHeightWF:=t1^;
-  dispose(t);
-  dispose(t1);
- end;
+var t, t1 : longint;
+begin
+  TTF_SizeUTF8(font, pansichar(s), addr(t), addr(t1));
+  TextHeightWF:=t1;
+end;
 
 Function TextWidth(S:ansistring):word;
  begin
@@ -1101,7 +1095,7 @@ Function GetEditTexture:ansistring;
  end;
 
 Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
- var t,t1:plongint;  tx,ty:integer; oldColor:tSDL_COLOR;
+ var t,t1:longint;  tx,ty:integer; oldColor:tSDL_COLOR;
  begin
   oldColor:=color;
   setcolorRGBA(labelcolor.r,labelcolor.g,labelcolor.b,labelcolor.a);
@@ -1120,13 +1114,11 @@ Procedure DrawLabel(x1,y1,x2,y2:integer; text:ansistring);
   setcolorRGBA(0,0,0,120);
   line(x1,y2-2,x2,y2-2);
   line(x2-2,y1,x2-2,y2);
-  new(t);new(t1);
-  ttf_sizeutf8(font,pansichar(text),t,t1);
-  tx:=(x1+x2-t^) div 2;
-  ty:=(y1+y2-t1^) div 2;
+  ttf_sizeutf8(font,pansichar(text),addr(t),addr(t1));
+  tx:=(x1+x2-t) div 2;
+  ty:=(y1+y2-t1) div 2;
   outtextxycolored(tx+1,ty+1,text,120,120,120,255);
   outtextxy(tx,ty,text);
-  dispose(t);dispose(t1);
   setColorRgba(oldcolor.r,oldcolor.g,oldcolor.b,oldcolor.a);
  end;
 
