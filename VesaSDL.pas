@@ -1,15 +1,11 @@
 { VesaSDL.pas - main part of VesaSDL module
-
 Copyright (c) 2015-2017 NFS_MONSTR(Maxim Belyaev)
-
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
 arising from the use of this software.
-
 Permission is granted to anyone to use this software for any purpose,
 including commercial applications, and to alter it and redistribute it
 freely, subject to the following restrictions:
-
     1. The origin of this software must not be misrepresented; you must not
        claim that you wrote the original software. If you use this software
        in a product, an acknowledgement in the product documentation would be
@@ -251,8 +247,13 @@ const{This is palette for compatibility with old Vesa Module}
  (r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),
  (r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),(r:0; g:0; b:0; a:255),
  (r:0; g:0; b:0; a:255));
- var apw,aph:integer;{Width and height of application windown} window:pointer;{Pointer to window}
+ var apw,aph:integer;{Width and height of application windown}
      currentCursor:pSDL_CURSOR;
+     
+     window : pointer;
+     render : pointer;
+     font : pointer;
+     
 Implementation
  const
        {$ifdef ENDIAN_BIG}
@@ -266,9 +267,7 @@ Implementation
          bmask:longword=$00ff0000;
          amask:longword=$ff000000;
        {$endif}
- var font:pointer;
-     color,TextColor,buttoncolor,windowcolor,labelcolor,editcolor:tcolor;
-     render:pointer;
+ var color,TextColor,buttoncolor,windowcolor,labelcolor,editcolor:tcolor;
      buttonTexture,windowTexture,labelTexture,editTexture:pointer;
      buttonTextureName,windowTextureName,labelTextureName,editTextureName:ansistring;
      debug:boolean;
@@ -337,7 +336,7 @@ Procedure SetUserCursor(pathToCursor:ansistring; hotX,hotY:integer);
   if currentCursor<>nil then
    begin
     SDL_FreeCursor(currentCursor);
-	currentCursor:=nil;
+  currentCursor:=nil;
    end;
   surf:=IMG_Load(pchar(ansistring(pathToCursor)));
   currentCursor:=SDL_CreateColorCursor(surf,hotx,hoty);
@@ -350,7 +349,7 @@ Procedure SetStandartCursor;
   if currentCursor<>nil then 
    begin
     SDL_FreeCursor(currentCursor);
-	currentCursor:=nil;
+  currentCursor:=nil;
    end;
   curs:=SDL_GetDefaultCursor;
   SDL_SetCursor(curs);
